@@ -1,0 +1,49 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const entries = [
+  {
+    type: 'ANCIENT SYSTEM', name: 'The Celestial Engine',
+    summary: 'Created during the Luminar Ascendancy’s struggle against the collapse of reality, the Engine stands at the centre of a responsibility that spans ages.'
+  },
+  {
+    type: 'CHARACTER', name: 'The Seeker',
+    summary: 'An unexplained calling begins a journey towards the Meridian. Discovery becomes responsibility as the Seeker learns that certainty and hope are not the same thing.'
+  },
+  {
+    type: 'CHARACTER', name: 'Meridian',
+    summary: 'Known in an earlier life as Asteris, her story asks how anyone can protect possibility without claiming the right to choose for everyone else.'
+  },
+  {
+    type: 'PHENOMENON', name: 'The Fractures',
+    summary: 'Anomalies that challenge the continuity of memory, history and reality itself. Their origins and final meaning remain uncertain.'
+  }
+];
+---
+<SiteLayout title="The Archive" current="archive">
+  <section class="page-heading content-shell">
+    <p class="overline">RECORDS / FRAGMENTS / QUESTIONS</p>
+    <h1>The <em>Archive</em></h1>
+    <p>Not every story begins at its beginning. Explore some of the people and mysteries at the heart of Meridian Court.</p>
+  </section>
+  <section class="archive-content content-shell">
+    <div class="archive-manifesto">
+      <span class="archive-sigil" aria-hidden="true">✧</span>
+      <p>“Protect possibility. Honour choice. Live with consequence.”</p>
+      <span class="section-caption">A guiding principle of the Meridian Chronicle</span>
+    </div>
+    <div class="archive-grid">
+      {entries.map((entry, index) => (
+        <article class="archive-card">
+          <div class="archive-topline"><span class="overline">{entry.type}</span><span class="archive-index">RECORD {String(index + 1).padStart(3, '0')}</span></div>
+          <h2>{entry.name}</h2>
+          <p>{entry.summary}</p>
+        </article>
+      ))}
+    </div>
+    <div class="archive-bottom">
+      <p>Additional records will become available as the public Archive grows.</p>
+      <a class="text-link" href={base + 'chronology/'}>Explore the chronology <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</SiteLayout>

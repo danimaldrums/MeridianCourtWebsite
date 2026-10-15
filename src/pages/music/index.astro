@@ -1,0 +1,46 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { arcs, chronicles } from '../../data/albums';
+---
+<SiteLayout title="Music" current="music" description="Explore the released Meridian Court numbered Arcs and the Meridian Chronicle.">
+  <section class="page-heading content-shell">
+    <p class="overline">THE SOUND OF THE STORY</p>
+    <h1>The <em>Music</em></h1>
+    <p>Every album opens another part of the world. Follow the numbered Arcs or discover a Chronicle from another era.</p>
+  </section>
+  <section class="catalog content-shell">
+    <div class="section-ribbon"><span class="overline">THE NUMBERED SAGA</span><span class="section-caption">FIVE RELEASED ARCS</span></div>
+    <div class="album-grid">
+      {arcs.map((album) => (
+        <article class="album-card" id={album.slug}>
+          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]} role="img" aria-label={'Temporary abstract website graphic for ' + album.title}>
+            <div class="art-circle"></div><div class="art-halo"></div>
+            <div class="art-caption"><span>MERIDIAN COURT</span><strong>{album.title}</strong><small>{album.arc} · {album.phase}</small></div>
+          </div>
+          <div class="album-meta"><span>{album.arc} · {album.phase}</span><span>RELEASED</span></div>
+          <h2>{album.title}</h2>
+          <p class="album-strapline">{album.tagline}</p>
+          <p>{album.summary}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="catalog content-shell">
+    <div class="section-ribbon"><span class="overline">BEYOND THE NUMBERED ARCS</span><span class="section-caption">RELEASED CHRONICLES</span></div>
+    <div class="album-grid">
+      {chronicles.map((album) => (
+        <article class="album-card" id={album.slug}>
+          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]} role="img" aria-label={'Temporary abstract website graphic for ' + album.title}>
+            <div class="art-circle"></div><div class="art-halo"></div>
+            <div class="art-caption"><span>MERIDIAN COURT · CHRONICLES</span><strong>{album.title}</strong><small>{album.arc}</small></div>
+          </div>
+          <div class="album-meta"><span>{album.arc}</span><span>RELEASED</span></div>
+          <h2>{album.title}</h2>
+          <p class="album-strapline">{album.tagline}</p>
+          <p>{album.summary}</p>
+        </article>
+      ))}
+    </div>
+    <p class="footnote">Official album covers and verified listening links will be added in the next content pass. These abstract graphics are temporary website art, not canonical covers.</p>
+  </section>
+</SiteLayout>

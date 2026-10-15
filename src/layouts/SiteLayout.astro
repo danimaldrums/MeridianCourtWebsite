@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: 'home' | 'music' | 'chronology' | 'archive';
+}
+const {
+  title,
+  description = 'Meridian Court — a cinematic music saga of memory, possibility, choice and consequence.',
+  current
+} = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const navigation = [
+  { label: 'Home', href: base, key: 'home' },
+  { label: 'Music', href: base + 'music/', key: 'music' },
+  { label: 'Chronology', href: base + 'chronology/', key: 'chronology' },
+  { label: 'The Archive', href: base + 'archive/', key: 'archive' }
+];
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#0d1016"/>
+    <meta name="description" content={description}/>
+    <title>{title} | Meridian Court</title>
+    <link rel="icon" type="image/svg+xml" href={base + 'favicon.svg'}/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="edge-frame" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href={base} aria-label="Meridian Court home">
+        <svg class="brand-mark" aria-hidden="true" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width=".8" opacity=".65"/>
+          <circle cx="24" cy="24" r="12.5" stroke="currentColor" stroke-width=".5" opacity=".65"/>
+          <path d="M24 1 27.6 20.4 47 24 27.6 27.6 24 47 20.4 20.4 1 24 20.4 20.4Z" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="24" cy="24" r="2" fill="currentColor"/>
+        </svg>
+        <span>MERIDIAN <em>COURT</em></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        {navigation.map((item) => <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>{item.label}</a>)}
+      </nav>
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer class="site-footer">
+      <div class="footer-ornament" aria-hidden="true">✧</div>
+      <p class="footer-logo">MERIDIAN COURT</p>
+      <p class="footer-line">Protect possibility. Honour choice. Live with consequence.</p>
+      <nav aria-label="Footer navigation">
+        {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <small>© {new Date().getFullYear()} Meridian Court · An independent music and story universe</small>
+    </footer>
+  </body>
+</html>

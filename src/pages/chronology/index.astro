@@ -1,0 +1,44 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { arcs } from '../../data/albums';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<SiteLayout title="Chronology" current="chronology">
+  <section class="page-heading content-shell">
+    <p class="overline">A GUIDE THROUGH THE AGES</p>
+    <h1>The <em>Chronology</em></h1>
+    <p>The order in which the stories take place is not necessarily their release order. Some of the most important stretches of history remain unknown.</p>
+  </section>
+  <section class="timeline-wrap content-shell">
+    <ol class="timeline">
+      <li class="timeline-entry"><span class="timeline-marker">Ø</span><div>
+        <p class="overline">THE ANCIENT ORIGIN · ARC Ø</p>
+        <h2>The Last Architect</h2><p>At the edge of a collapsing reality, Aurex Valen enters the Celestial Engine.</p>
+      </div></li>
+      <li class="timeline-gap"><span class="timeline-marker">·</span><div>
+        <p class="overline">THE GREAT HISTORICAL UNKNOWN</p>
+        <p>Immense stretches of time remain undocumented. The following released Chronicle reveals only one episode within this gap.</p>
+      </div></li>
+      <li class="timeline-entry"><span class="timeline-marker">✧</span><div>
+        <p class="overline">CHRONICLES · MERIDIAN</p>
+        <h2>All That Might Have Been</h2><p>Asteris's earlier story of loss, possibility and responsibility.</p>
+      </div></li>
+      <li class="timeline-gap"><span class="timeline-marker">·</span><div>
+        <p class="overline">THE UNKNOWN CONTINUES</p>
+        <p>The Chronicle does not explain the complete formation of the later Court.</p>
+      </div></li>
+      {arcs.slice(1).map((album) => (
+        <li class="timeline-entry">
+          <span class="timeline-marker">{album.arc.replace('ARC ', '')}</span>
+          <div><p class="overline">{album.arc} · {album.phase}</p><h2>{album.title}</h2><p>{album.summary}</p></div>
+        </li>
+      ))}
+      <li class="timeline-gap"><span class="timeline-marker">?</span><div>
+        <p class="overline">THE UNWRITTEN FUTURE</p>
+        <p>What comes next has not yet been made public.</p>
+      </div></li>
+    </ol>
+    <p class="footnote">This chronology is intentionally spoiler-light. It excludes unreleased material and does not infer connections across unknown periods.</p>
+    <a class="button button-outline" href={base + 'music/'}>Explore the albums <span aria-hidden="true">↗</span></a>
+  </section>
+</SiteLayout>
