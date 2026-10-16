@@ -84,3 +84,28 @@ h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;
 .page-heading{padding-top:84px;padding-bottom:40px}.page-heading h1{font-size:clamp(72px,14vw,100px)}.album-grid{grid-template-columns:1fr;gap:50px}.album-art{max-width:520px}.album-art .art-caption strong{font-size:42px}.catalog{padding-bottom:75px}
 .timeline li{grid-template-columns:66px 1fr;gap:18px}.timeline-marker{width:66px;height:66px;font-size:35px}.timeline li:not(:last-child)::after{left:32px;top:65px}.timeline h2{font-size:35px}.archive-grid{grid-template-columns:1fr}.archive-bottom{display:block}.site-footer nav{flex-wrap:wrap;gap:17px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.engine-ring{animation:none}.button,.arc-item{transition:none}}
+
+/* v0.2 — canonical public artwork integration; previous art remains the fallback until images are uploaded. */
+.hero-illustration{position:absolute;z-index:-1;top:0;right:0;bottom:0;width:58%;overflow:hidden;opacity:.68;mask-image:linear-gradient(90deg,transparent 0%,#000 32%,#000 100%);}
+.hero-illustration img{width:100%;height:100%;object-fit:cover;object-position:center;}
+.hero-copy{margin-right:auto;margin-left:clamp(20px,5vw,85px);text-align:left;max-width:760px;}
+.hero-description{margin-left:0;max-width:460px;}
+.hero-actions{justify-content:flex-start;}
+.hero:has(.hero-illustration img:not([hidden])) .hero-engine{opacity:.22;left:64%;}
+.approved-cover{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;z-index:6;}
+.approved-cover[hidden],.footer-official-logo[hidden]{display:none;}
+.feature-art{height:auto;aspect-ratio:1/1;}
+.album-art{aspect-ratio:1/1;}
+.footer-official-logo{display:block;width:156px;height:156px;object-fit:contain;margin:0 auto 12px;mix-blend-mode:screen;}
+@media(max-width:960px){
+  .hero-copy{margin:0 auto;text-align:center;}
+  .hero-description{margin-left:auto;margin-right:auto;}
+  .hero-actions{justify-content:center;}
+  .hero-illustration{width:100%;height:100%;opacity:.34;mask-image:linear-gradient(0deg,transparent 0%,#000 45%,#000 100%);}
+}
+@media(max-width:620px){
+  .hero-illustration{opacity:.32;}
+  .hero-copy{padding-top:110px;}
+  .feature-art{aspect-ratio:1/1;}
+  .album-art{aspect-ratio:1/1;}
+}
