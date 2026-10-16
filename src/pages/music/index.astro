@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <div class="album-grid">
       {arcs.map((album) => (
         <article class="album-card" id={album.slug}>
-          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]} role="img" aria-label={'Temporary abstract website graphic for ' + album.title}>
+          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]}>
             <img class="approved-cover" src={base + album.cover} alt={'Official Meridian Court cover: ' + album.title} loading="lazy" decoding="async" onerror="this.hidden=true" />
             <div class="art-circle"></div><div class="art-halo"></div>
             <div class="art-caption"><span>MERIDIAN COURT</span><strong>{album.title}</strong><small>{album.arc} · {album.phase}</small></div>
@@ -32,7 +32,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <div class="album-grid">
       {chronicles.map((album) => (
         <article class="album-card" id={album.slug}>
-          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]} role="img" aria-label={'Temporary abstract website graphic for ' + album.title}>
+          <div class:list={['art-panel', 'album-art', 'tone-' + album.tone]}>
             <img class="approved-cover" src={base + album.cover} alt={'Official Meridian Court cover: ' + album.title} loading="lazy" decoding="async" onerror="this.hidden=true" />
             <div class="art-circle"></div><div class="art-halo"></div>
             <div class="art-caption"><span>MERIDIAN COURT · CHRONICLES</span><strong>{album.title}</strong><small>{album.arc}</small></div>

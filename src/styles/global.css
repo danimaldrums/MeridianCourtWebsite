@@ -109,3 +109,49 @@ h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;
   .feature-art{aspect-ratio:1/1;}
   .album-art{aspect-ratio:1/1;}
 }
+
+/* v0.3 — increase the cinematic imagery's visibility with predictable positive
+   stacking layers. This also avoids negative z-index print/PDF compositing issues. */
+.hero { isolation: isolate; }
+.hero .hero-illustration {
+  z-index: 0;
+  width: 64%;
+  opacity: .9;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.hero .hero-illustration img {
+  width: 100%;
+  height: 100%;
+  object-position: 50% 43%;
+}
+.hero .hero-stars,
+.hero .hero-engine { z-index: 1; }
+.hero::before {
+  z-index: 2;
+  background:
+    linear-gradient(0deg, #0d1016 0%, transparent 26%),
+    linear-gradient(90deg, rgba(13,16,22,.96) 0%, rgba(13,16,22,.87) 30%, rgba(13,16,22,.48) 54%, rgba(13,16,22,.20) 100%);
+}
+.hero .hero-copy,
+.hero .hero-foot { position: relative; z-index: 3; }
+.hero .hero-foot { position: absolute; }
+.hero:has(.hero-illustration img:not([hidden])) .hero-engine { left: 69%; opacity: .24; }
+.footer-official-logo { width: 186px; height: 186px; }
+@media (max-width: 960px) {
+  .hero .hero-illustration { width: 100%; opacity: .62; }
+  .hero .hero-illustration img { object-position: center 32%; }
+  .hero::before {
+    background:
+      linear-gradient(0deg, #0d1016 0%, rgba(13,16,22,.72) 34%, rgba(13,16,22,.62) 100%);
+  }
+  .hero:has(.hero-illustration img:not([hidden])) .hero-engine { left: 50%; opacity: .17; }
+}
+@media (max-width: 620px) {
+  .hero { height: 640px; }
+  .hero .hero-illustration { opacity: .65; }
+  .hero h1 { font-size: clamp(70px, 14vw, 92px); }
+  .hero .hero-copy { padding-top: 92px; }
+  .intro, .feature, .journey { padding-block: 70px; }
+  .footer-official-logo { width: 174px; height: 174px; }
+}
