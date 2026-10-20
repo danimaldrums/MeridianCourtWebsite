@@ -68,6 +68,6 @@ export const narrationsArcZero = [
     "albumTitle": "The Last Architect",
     "albumArc": "ARC Ø",
     "archiveNumber": 7,
-    "body": "### Recovered Archive.\n\nIdentity confirmed.\n\nChief Stellar Engineer…\n\nAurex Valen.\n\nFinal surviving citizen of the Luminar Ascendancy.\n\nPrimary consciousness of the Celestial Engine.\n\nStatus…\n\nStill operational."
+    "body": "Recovered Archive.\n\nIdentity confirmed.\n\nChief Stellar Engineer…\n\nAurex Valen.\n\nFinal surviving citizen of the Luminar Ascendancy.\n\nPrimary consciousness of the Celestial Engine.\n\nStatus…\n\nStill operational."
   }
 ] as const;

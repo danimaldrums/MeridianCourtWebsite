@@ -35,3 +35,9 @@ The site is ready for eight web-optimised, user-approved public assets in `publi
 Until the images are uploaded, CSS placeholder art remains as a fallback. Upload the files individually; GitHub does not unpack a ZIP automatically. Exact filenames and safeguards are documented in `public/images/README.md`.
 
 Do not upload unpublished First Circle or Arc V artwork into this public repository.
+
+## Public Codex (v0.4)
+
+The [Meridian Codex](https://danimaldrums.github.io/MeridianCourtWebsite/archive/) now has a searchable index with 54 editorially curated public records: 19 character/location/phenomenon entries and 35 released, canonical narrated Archive scripts. Every record has a dedicated page with optional spoiler-revealing text, and reference entries link to related public records. The archive deliberately does not expose unreleased materials, Suno prompts or private governance files.
+
+The hidden-record puzzle and any entirely new story revelation are **not yet published**; both the reveal's exact wording and its canon status require creator approval. Also note the Arc I `The First Page` source narration is currently very short and should be cross-checked against released audio.

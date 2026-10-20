@@ -26,7 +26,7 @@ export const referenceRecords: CodexReference[] = [
     "albumSlug": "the-last-architect",
     "albumTitle": "The Last Architect",
     "related": [
-      "celestial-engine",
+      "the-celestial-engine",
       "the-great-silence",
       "aureon",
       "the-last-architect-archive-07"
