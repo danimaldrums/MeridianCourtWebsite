@@ -2,6 +2,7 @@
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { codexRecords, codexBySlug, type CodexRecord } from '../../data/codex';
 import { archiveDesignation } from '../../data/archive-identifiers';
+import artworkOverrides from '../../data/codex-artworks.json';
 import { peopleCompanion } from '../../data/codex-companion-people';
 import { placesCompanion } from '../../data/codex-companion-places';
 import { arcs, chronicles } from '../../data/albums';
@@ -13,6 +14,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',narration:'ARCHIVE NARRATION'};
 const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
 const designation = record.kind === 'narration' ? archiveDesignation(record.slug) : undefined;
+const artworkOverride = (artworkOverrides as Record<string,string>)[record.slug];
 const companion = record.kind === 'narration' ? undefined : (peopleCompanion[record.slug] ?? placesCompanion[record.slug]);
 const related = record.kind === 'narration' ? [] : record.related.map(slug=>codexBySlug.get(slug)).filter((r):r is CodexRecord=>Boolean(r));
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
@@ -29,8 +31,8 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
         <div class="manuscript-art">
           {record.kind === 'narration'
             ? (album && <img src={base + album.cover} alt={'Official cover artwork for '+album.title} width="360" height="360" loading="lazy"/>)
-            : <img src={base + 'images/codex/' + record.slug + '.svg'} alt={'An illustrative '+(record.kind==='character'?'character study':'scene')+' for '+record.title+'; details are not an authenticated historical likeness'} width="360" height="360" loading="lazy"/>}
-          <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
+            : <img class={artworkOverride ? 'codex-approved-portrait' : ''} src={base + (artworkOverride || 'images/codex/' + record.slug + '.svg')} alt={'An illustrated '+(record.kind==='character'?'portrait':'scene')+' for '+record.title+'; artistic details are interpretive'} width="360" height="360" loading="lazy"/>}
+          <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : artworkOverride ? 'APPROVED CODEX ILLUSTRATION' : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
         </div>
         <p class="manuscript-opening">{record.kind === 'narration' ? ('Recovered testimony · '+(designation?.label || 'ARCHIVE')+' · '+record.albumTitle+'.') : record.summary}</p>
         <div class="manuscript-provenance"><span>RECORDED IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
@@ -95,7 +97,7 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
       <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item">
-        {item.kind !== 'narration' && <img src={base+'images/codex/'+item.slug+'.svg'} alt="" width="110" height="110" loading="lazy"/>}
+        {item.kind !== 'narration' && <img src={base + ((artworkOverrides as Record<string,string>)[item.slug] || 'images/codex/'+item.slug+'.svg')} alt="" width="110" height="110" loading="lazy"/>}
         <span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span>
       </a>)}</div>
     </section>}
@@ -148,5 +150,6 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 .manuscript-chapter h3{font:500 40px/1 'Cormorant Garamond',Georgia,serif;color:#392719;margin:14px 0 20px}
 .manuscript-chapter p{font:22px/1.4 'Cormorant Garamond',Georgia,serif;color:#34271b}
 @media(max-width:700px){.manuscript-ledger-row{grid-template-columns:1fr;gap:5px}.manuscript-chapter h3{font-size:36px}}
+.manuscript-art img.codex-approved-portrait{aspect-ratio:auto;object-fit:contain;height:auto;max-height:600px}
 </style>
 </SiteLayout>
