@@ -67,7 +67,7 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
             : <div class="manuscript-prose manuscript-chapters">
                 {companion?.chapters.map((chapter, index)=>
                   <section class="manuscript-chapter">
-                    <p class="manuscript-chapter-number">CHAPTER {String(index+1).padStart(2,'0')}</p>
+                    <span class="manuscript-chapter-number">CHAPTER {String(index+1).padStart(2,'0')}</span>
                     <h3>{chapter.heading}</h3>
                     {chapter.paragraphs.map(paragraph=><p>{paragraph}</p>)}
                   </section>
@@ -127,4 +127,21 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
       });
     })();
   </script>
+
+<style is:global>
+.manuscript-ledger{margin:27px 0 5px;padding:18px 0;border-top:1px solid #866944;border-bottom:1px solid #866944}
+.manuscript-ledger h2{font:italic 26px 'Cormorant Garamond',Georgia,serif;color:#795331;margin:0 0 13px;text-align:left}
+.manuscript-ledger dl{margin:0}
+.manuscript-ledger-row{display:grid;grid-template-columns:1fr 1.3fr;gap:12px;padding:9px 0;border-top:1px solid #8e6f494d}
+.manuscript-ledger dt{font:600 9px Inter,sans-serif;color:#74502c;text-transform:uppercase;letter-spacing:.08em}
+.manuscript-ledger dd{margin:0;font:20px 'Cormorant Garamond',Georgia,serif;color:#33251b}
+.manuscript-overview{padding:15px 0;border-top:1px solid #876b48}
+.manuscript-overview p{font:22px/1.37 'Cormorant Garamond',Georgia,serif;color:#362718}
+.manuscript-chapter{padding:22px 0}
+.manuscript-chapter+.manuscript-chapter{border-top:1px solid #876b48}
+.manuscript-chapter-number{display:block;font:600 10px Inter,sans-serif;letter-spacing:.14em;color:#795331}
+.manuscript-chapter h3{font:500 40px/1 'Cormorant Garamond',Georgia,serif;color:#392719;margin:14px 0 20px}
+.manuscript-chapter p{font:22px/1.4 'Cormorant Garamond',Georgia,serif;color:#34271b}
+@media(max-width:700px){.manuscript-ledger-row{grid-template-columns:1fr;gap:5px}.manuscript-chapter h3{font-size:36px}}
+</style>
 </SiteLayout>
