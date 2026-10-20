@@ -401,3 +401,10 @@ h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;
 .unindexed-final-mark p {font:italic 19px/1.2 'Cormorant Garamond',Georgia,serif;margin:0;color:#573e27;}
 .unindexed-disclaimer {max-width:900px;margin:0 auto 31px;color:#ae9f89;font-size:11px;line-height:1.9;}
 @media(max-width:700px){.unindexed-header {margin:51px auto 38px;}.unindexed-header h1 {font-size:clamp(59px,12vw,85px);}.unindexed-stage {padding-top:28px;}.unindexed-seal {padding:44px 22px;}.unindexed-illustration {height:225px;}.unindexed-narrative p {font-size:23px;}.unindexed-page h2 {font-size:56px;}}
+
+/* Fair, discoverable entry point to the book and its optional marginal puzzle. */
+.codex-hint {font:italic 18px/1.2 'Cormorant Garamond',Georgia,serif!important;color:#78542d!important;margin:14px auto 19px!important;max-width:360px;text-align:center;}
+.codex-open-link {display:inline-flex;align-items:center;gap:18px;margin:9px 0 13px;color:#472c16;font-size:10px;letter-spacing:.16em;text-transform:uppercase;border:1px solid #967048a8;padding:12px 20px;}
+.codex-open-link:hover {background:#6944211c;}
+.codex-open-link:focus-visible {outline:3px solid #754920;outline-offset:3px;}
+#codex-index {scroll-margin-top:35px;}
