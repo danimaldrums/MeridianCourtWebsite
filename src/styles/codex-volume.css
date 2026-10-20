@@ -1,0 +1,105 @@
+/* Meridian Codex Volume II — book instead of a card catalogue */
+.volume-entry{padding-top:54px;padding-bottom:92px;max-width:1280px}
+.volume-entry-overline,.codex-afterword{color:#af946d;text-align:center;font:10px/1.7 Inter,system-ui,sans-serif;letter-spacing:.22em}
+.volume-entry-overline{margin:0 0 24px}
+.codex-afterword{margin-top:29px}
+.codex-volume{display:grid;grid-template-columns:1fr 1fr;position:relative;isolation:isolate;box-shadow:0 38px 90px #000c;perspective:1900px;border:12px solid #3c2c20;background:#6a4d2e}
+.codex-volume:before{content:"";position:absolute;inset:-18px -13px -19px;z-index:-1;background:repeating-linear-gradient(0deg,#ddbf8f 0 1px,#664624 2px 3px);border:5px solid #251c15;border-radius:5px}
+.codex-book-spine{position:absolute;top:0;bottom:0;left:calc(50% - 12px);width:24px;background:linear-gradient(90deg,#8e714b30,#3e291a93 50%,#fff2c555);z-index:4;pointer-events:none;box-shadow:2px 0 8px #25180f45}
+.codex-volume-leaf{position:relative;min-width:0;min-height:810px;padding:49px clamp(26px,4.2vw,63px) 25px;color:#332516;background-color:#d1b786;background-image:radial-gradient(ellipse at 9% 12%,#fbebc3aa,transparent 55%),radial-gradient(ellipse at 91% 6%,#79502f28,transparent 36%),radial-gradient(ellipse at 70% 86%,#6c452a44,transparent 63%),repeating-linear-gradient(16deg,#4c2e1410 0px 1px,transparent 1px 6px),linear-gradient(90deg,#b39a6b,#eddbb5 9%,#d7bc8d 70%,#ab865e);overflow:hidden}
+.codex-volume-leaf:before{content:"";position:absolute;inset:12px;border:1px solid #84624188;pointer-events:none}
+.codex-volume-leaf:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 13% 93%,#4c271525,transparent 22%),radial-gradient(ellipse at 93% 22%,#6f37182a,transparent 19%),repeating-linear-gradient(25deg,transparent 0 54px,#8869470d 55px 56px,transparent 57px 89px);mix-blend-mode:multiply}
+.codex-volume-left{box-shadow:inset -42px 0 50px #593b1e25,inset 0 0 70px #4f2a0e40}
+.codex-volume-right{box-shadow:inset 42px 0 50px #593b1e2a,inset 0 0 70px #4f2a0e40}
+.codex-volume-left>*:not(.codex-volume-running),.codex-volume-right>*:not(.codex-volume-running){position:relative;z-index:2}
+.codex-volume-running,.codex-volume-leaf-bottom{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #87664699;padding-bottom:13px;font:9px/1.4 Inter,sans-serif;letter-spacing:.13em;color:#6b4a2b}
+.codex-volume-leaf-bottom{border-bottom:0;border-top:1px solid #87664699;padding:15px 0 0;margin-top:35px}
+.codex-volume-flourish{font-size:38px;text-align:center;margin:18px auto 7px;color:#98703e}
+.volume-eyebrow{margin:17px 0;font:10px/1.5 Inter,sans-serif;letter-spacing:.16em;color:#835b2c}
+.codex-volume-left h1{font:500 clamp(62px,6.4vw,93px)/.77 'Cormorant Garamond',Georgia,serif;letter-spacing:-.05em;color:#2d2017;margin:26px 0 32px;text-align:center}
+.codex-volume-left h1 em{color:#855324}
+.codex-volume-intro{font:italic 23px/1.25 'Cormorant Garamond',Georgia,serif;color:#473426;text-align:center;max-width:425px;margin:12px auto 34px}
+.codex-volume-toc-heading,.codex-page-index-heading{display:flex;justify-content:space-between;gap:12px;padding-bottom:9px;border-bottom:2px double #9d7950;font:600 10px/1.5 Inter,sans-serif;letter-spacing:.15em;color:#6c4b2a}
+.codex-volume-chapters{display:flex;flex-direction:column}
+.codex-chapter-tab{border:0;border-bottom:1px solid #9c815f77;background:transparent;display:grid;grid-template-columns:36px 1fr auto;gap:13px;text-align:left;align-items:center;padding:15px 6px;color:#493420;cursor:pointer;transition:background .18s ease}
+.codex-chapter-tab:hover,.codex-chapter-tab[aria-pressed=true]{background:#80532825}
+.codex-chapter-tab:focus-visible,.codex-folio-row:focus-visible{outline:3px solid #77502d;outline-offset:1px}
+.codex-chapter-numeral{font:italic 31px/1 'Cormorant Garamond',Georgia,serif;color:#885d2f}
+.codex-chapter-name strong{display:block;font:500 28px/1 'Cormorant Garamond',Georgia,serif;color:#392718}
+.codex-chapter-name small{font:10px/1.7 Inter,sans-serif;color:#72583e;letter-spacing:.06em}
+.codex-chapter-count{font:12px/1.4 Inter,sans-serif;color:#866036}
+.codex-chapter-count span{padding-left:4px}
+.codex-page-marginalia{font:italic 19px/1.25 'Cormorant Garamond',Georgia,serif;color:#73502b;margin:30px 0 0;border-left:2px solid #967243;padding:4px 13px}
+.codex-volume-right h2{font:500 clamp(48px,5vw,73px)/.9 'Cormorant Garamond',Georgia,serif;color:#332319;margin:0 0 8px}
+.codex-volume-right h2 em{color:#825127}
+.codex-volume-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.codex-volume-signet{font-size:45px;color:#92682f}
+.codex-volume-blurb{font:20px/1.22 'Cormorant Garamond',Georgia,serif;color:#644a30;margin:13px 0 29px}
+.codex-embedded-search{border-top:2px double #96744c;padding-top:15px;display:flex;flex-direction:column;gap:9px}
+.codex-embedded-search>label{font:600 9px Inter,sans-serif;letter-spacing:.16em;color:#73532e}
+.codex-embedded-search-field{display:flex;align-items:center;border-bottom:1px solid #76553999;padding:0 2px}
+.codex-embedded-search-field span{font:35px 'Cormorant Garamond',Georgia,serif;color:#795531}
+#codex-search,#codex-album{width:100%;background:transparent;color:#2d2116;border:0;border-radius:0;outline:none;font:15px Inter,sans-serif;padding:12px 9px;min-height:43px}
+#codex-search::placeholder{color:#765b41;opacity:1}
+#codex-album{border:1px solid #98754d99;background:#e0c99e;min-height:45px;margin:0 0 23px;color:#4c331f}
+#codex-search:focus-visible,#codex-album:focus-visible{outline:3px solid #76502f;outline-offset:2px}
+.codex-page-index-heading{padding:12px 0;border-top:1px solid #96744c99}
+.codex-page-index-heading span:last-child{white-space:nowrap;font-weight:400;letter-spacing:.04em}
+.codex-folio-list{display:flex;flex-direction:column;max-height:690px;overflow:auto;scrollbar-color:#96724866 transparent;scrollbar-width:thin}
+.codex-folio-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:12px;padding:13px 0;border-bottom:1px dotted #82613c99;text-decoration:none;color:#402a1a}
+.codex-folio-row:hover{background:#845b3421}
+.codex-folio-row[hidden],.codex-no-entries[hidden],.codex-index-secret[hidden]{display:none!important}
+.codex-folio-symbol{font-size:22px;color:#936633;text-align:center}
+.codex-folio-name strong{display:block;font:500 25px/1.05 'Cormorant Garamond',Georgia,serif}
+.codex-folio-name small{font:9px/1.6 Inter,sans-serif;color:#6c5338;letter-spacing:.05em}
+.codex-folio-id{font:11px/1.4 Inter,sans-serif;color:#805830}
+.codex-no-entries{font:italic 21px 'Cormorant Garamond',Georgia,serif;color:#684d33;padding:19px 0}
+.codex-index-sealed{margin:28px 0 0;padding:15px 0;border-block:1px solid #916e488c;display:flex;gap:17px;align-items:center;color:#66472a}
+.codex-index-sealed>span{font:34px 'Cormorant Garamond',Georgia,serif}
+.codex-index-sealed p{font:italic 17px/1.2 'Cormorant Garamond',Georgia,serif;margin:0}
+.codex-index-sealed strong{display:block;font:600 9px Inter,sans-serif;letter-spacing:.13em;margin-bottom:5px}
+.codex-index-secret{margin-top:20px;padding:15px;border:1px solid #89653a;background:#bc9e6a66;color:#50371e}
+.codex-index-secret p{font:italic 18px 'Cormorant Garamond',Georgia,serif;margin:5px 0}
+.codex-index-secret a{color:#50301a;text-decoration:underline}
+.codex-opening-cover{display:none;pointer-events:none;position:absolute;inset:0;z-index:15;transform-origin:left center;backface-visibility:hidden;transform-style:preserve-3d;background:radial-gradient(ellipse at 50% 24%,#70512944,transparent 50%),linear-gradient(100deg,#0a0e13,#202226 55%,#0f1418);border:10px solid #332719;box-shadow:inset 0 0 0 5px #94683d4f,0 10px 35px #0009}
+.codex-opening-cover-frame{position:absolute;inset:27px;border:2px solid #ac8351;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;color:#e9d4a5}
+.codex-opening-cover-frame:before{content:"";position:absolute;inset:7px;border:1px solid #be9a6b66}
+.codex-opening-cover img{object-fit:contain;width:150px;height:150px;mix-blend-mode:screen}
+.cover-small{font:10px Inter,sans-serif;letter-spacing:.22em}
+.cover-main{font:500 clamp(55px,8vw,105px)/.82 'Cormorant Garamond',Georgia,serif;letter-spacing:-.04em}
+.cover-main em{color:#d8b985}
+.cover-divider{font-size:30px;color:#c9ab79}
+.codex-volume.is-opening .codex-opening-cover{display:block;animation:codex-cover-unseal 1.2s cubic-bezier(.27,.7,.17,1) forwards}
+@keyframes codex-cover-unseal{0%,10%{transform:rotateY(0);opacity:1}70%{transform:rotateY(-92deg);opacity:1}100%{transform:rotateY(-177deg);opacity:0}}
+@media(max-width:900px){
+ .volume-entry{padding-top:28px}
+ .codex-volume{grid-template-columns:1fr;max-width:700px;margin:auto;border-width:7px}
+ .codex-volume-leaf{min-height:auto;padding:37px clamp(23px,5vw,48px)}
+ .codex-volume-left{border-bottom:7px solid #4a3423}
+ .codex-volume-right{border-top:4px solid #b28b61;scroll-margin-top:25px}
+ .codex-book-spine{top:calc(50% - 12px);left:0;right:0;width:auto;height:24px;bottom:auto;background:linear-gradient(0deg,#27180c67,#f9e6c05c);display:none}
+ .codex-opening-cover{transform-origin:left center}
+ .codex-volume-left h1{font-size:clamp(62px,12vw,91px)}
+ .codex-volume-right h2{font-size:clamp(50px,10vw,74px)}
+ .codex-folio-list{max-height:590px}
+}
+@media(max-width:520px){
+ .volume-entry-overline{font-size:8px;letter-spacing:.14em}
+ .codex-volume-leaf{padding:29px 26px 23px}
+ .codex-chapter-tab{padding:12px 2px;gap:8px;grid-template-columns:27px 1fr 47px}
+ .codex-chapter-numeral{font-size:27px}
+ .codex-chapter-name strong{font-size:25px}
+ .codex-chapter-name small{font-size:9px}
+ .codex-volume-intro{font-size:23px}
+ .codex-page-marginalia{font-size:17px}
+ .codex-folio-name strong{font-size:24px}
+ .codex-folio-id{font-size:10px}
+ .codex-folio-row{grid-template-columns:22px 1fr auto;gap:6px}
+ .codex-volume-right h2{font-size:59px}
+ .codex-volume-leaf-bottom{font-size:8px}
+ .codex-opening-cover img{width:95px;height:95px}
+ .codex-opening-cover-frame{inset:13px;gap:13px}
+ .cover-main{font-size:59px}
+ .cover-small{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.codex-volume.is-opening .codex-opening-cover{display:none}.codex-chapter-tab{transition:none}html{scroll-behavior:auto}}

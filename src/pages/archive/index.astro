@@ -3,141 +3,144 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 import { codexRecords } from '../../data/codex';
 import { archiveDesignation } from '../../data/archive-identifiers';
 import { arcs, chronicles } from '../../data/albums';
+import '../../styles/codex-volume.css';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const albums = [ ...arcs, ...chronicles ];
-const types = [
-  { kind:'all', label:'All records' },
-  { kind:'character', label:'Characters' },
-  { kind:'location', label:'Locations' },
-  { kind:'narration', label:'Album Archives' },
-  { kind:'phenomenon', label:'Phenomena' }
+const albums = [...arcs, ...chronicles];
+const chapters = [
+ {key:'character',number:'I',name:'People of the Court',detail:'Lives & witnesses',count:codexRecords.filter(r=>r.kind==='character').length},
+ {key:'location',number:'II',name:'Places & monuments',detail:'Worlds & thresholds',count:codexRecords.filter(r=>r.kind==='location').length},
+ {key:'phenomenon',number:'III',name:'The unexplained',detail:'Events & anomalies',count:codexRecords.filter(r=>r.kind==='phenomenon').length},
+ {key:'narration',number:'IV',name:'Spoken Archives',detail:'The recorded words',count:codexRecords.filter(r=>r.kind==='narration').length},
+ {key:'all',number:'V',name:'The full register',detail:'Every accessible leaf',count:codexRecords.length}
 ];
-const counts = {
-  character: codexRecords.filter(e=>e.kind==='character').length,
-  location: codexRecords.filter(e=>e.kind==='location').length,
-  narration: codexRecords.filter(e=>e.kind==='narration').length,
-  phenomenon: codexRecords.filter(e=>e.kind==='phenomenon').length
-};
-const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE NARRATION',phenomenon:'PHENOMENON'};
+const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phenomenon:'PHENOMENON',narration:'ARCHIVE'};
 ---
-<SiteLayout title="The Archive" current="archive">
-  <section class="codex-cover-intro content-shell" aria-labelledby="codex-title">
-    <div class="codex-cover" aria-label="The Meridian Codex">
-      <div class="codex-cover-frame">
-        <p class="codex-cover-kicker">THE GENERAL RECORDS OF THE MERIDIAN COURT</p>
-        <img class="codex-cover-logo" src={base + 'images/meridian-court-logo.webp'} alt="Meridian Court official logo" width="240" height="240"/>
-        <span class="codex-cover-rule" aria-hidden="true">✧ ───── ◈ ───── ✧</span>
-        <h1 id="codex-title">The <em>Meridian</em> Codex</h1>
-        <p class="codex-cover-caption">PEOPLE · PLACES · RECOVERED WORDS</p>
-        <p class="codex-cover-epigraph">Every page is a doorway. Not every doorway appears in the index.</p>
-        <span class="codex-cover-clock" aria-hidden="true">Ⅰ &nbsp; · &nbsp; Ⅻ &nbsp; · &nbsp; Ⅰ</span>
-      </div>
+<SiteLayout title="The Meridian Codex" current="archive" description="Enter the general records of Meridian Court, an illustrated in-universe codex of people, places and archived testimony.">
+ <section class="volume-entry content-shell" aria-label="The Meridian Codex">
+  <p class="volume-entry-overline">THE MERIDIAN COURT · GENERAL REGISTRY</p>
+  <div class="codex-volume" id="codex-volume">
+   <div class="codex-opening-cover" id="codex-opening-cover" aria-hidden="true">
+    <div class="codex-opening-cover-frame">
+     <span class="cover-small">THE GENERAL RECORDS</span>
+     <img src={base+'images/meridian-court-logo.webp'} alt="" width="170" height="170"/>
+     <span class="cover-divider">✧ ◈ ✧</span>
+     <span class="cover-main">The Meridian<br/><em>Codex</em></span>
+     <span class="cover-small">VOLUME I · ACCESS BY DESIGNATION</span>
     </div>
-    <div class="codex-intro-page">
-      <p class="folio-eyebrow">VOLUME I &nbsp; / &nbsp; COURT REGISTRY</p>
-      <span class="codex-intro-emblem" aria-hidden="true">✧</span>
-      <h2>Open the <em>Archive</em></h2>
-      <p>Walk the corridors of the Meridian Court. Follow a life across the centuries, revisit a forgotten place, or open the words preserved between the songs.</p>
-      <div class="codex-tallies" aria-label="Archive index totals">
-        <span><strong>{counts.character}</strong> characters</span>
-        <span><strong>{counts.location}</strong> locations</span>
-        <span><strong>{counts.narration}</strong> narrations</span>
-        <span><strong>{counts.phenomenon}</strong> phenomena</span>
-      </div>
-      <p class="codex-hint">A traveller without a name. A hall without a first stone. A first step spoken aloud.<br/>Three margins; one page.</p>
-      <a class="codex-open-link" href="#codex-index">Turn to the Index <span aria-hidden="true">↓</span></a>
-      <div class="codex-intro-bottom"><span>READING ACCESS · INITIATE</span><span>EST. ✧</span></div>
-    </div>
-  </section>
-  <section id="codex-index" class="content-shell codex-content">
-    <aside class="court-access-status" aria-label="Reader authorisation">
-      <span class="court-access-seal" aria-hidden="true">✧</span>
-      <div class="court-access-description">
-        <p class="overline">MERIDIAN COURT · REGISTRY ACCESS</p>
-        <h2>Welcome, Initiate.</h2>
-        <p>Your reading designation permits consultation of the general Codex. Certain annexes remain sealed under the authority of senior archivists.</p>
-      </div>
-      <span class="court-access-tier">CLEARANCE I · ACCESS GRANTED</span>
-    </aside>
-    <div class="codex-index-head">
-      <p class="overline">THE OPEN INDEX</p>
-      <h2>Find a record</h2>
-      <p>The Court's general registers stand open to your designation. Names, places and remembered testimony await examination.</p>
-    </div>
-    <aside id="unindexed-discovery" class="codex-unindexed-discovery" hidden aria-live="polite">
-      <span aria-hidden="true">✧</span>
-      <p>A loose folio has been recovered.</p>
-      <a href={base + 'archive/the-unindexed-record/'}>Open the unindexed page ↗</a>
-    </aside>
-    <div class="codex-toolbar">
-      <label class="codex-field">
-        <span class="overline">SEARCH THE CODEX</span>
-        <input id="codex-search" type="search" placeholder="A person, place, title or idea…" autocomplete="off" aria-label="Search archive records"/>
-      </label>
-      <label class="codex-field codex-album-filter">
-        <span class="overline">ALBUM / CHRONICLE</span>
-        <select id="codex-album" aria-label="Filter Archive by album">
-          <option value="all">All accessible volumes</option>
-          {albums.map(album => <option value={album.slug}>{album.arc} · {album.title}</option>)}
-        </select>
-      </label>
-    </div>
-    <nav class="codex-filters" aria-label="Filter record type">
-      {types.map((type,index) => <button type="button" class="codex-filter" data-filter={type.kind} aria-pressed={index===0 ? 'true' : 'false'}>{type.label}</button>)}
+   </div>
+   <div class="codex-book-spine" aria-hidden="true"></div>
+   <section class="codex-volume-leaf codex-volume-left" aria-labelledby="codex-contents-title">
+    <div class="codex-volume-running"><span>MERIDIAN COURT</span><span>GENERAL REGISTER</span></div>
+    <div class="codex-volume-flourish" aria-hidden="true">✣</div>
+    <p class="volume-eyebrow">VOLUME I · CONTENTS</p>
+    <h1 id="codex-contents-title">The <em>Meridian</em><br/>Codex</h1>
+    <p class="codex-volume-intro">Here are held the lives, places and testimonies entrusted to the Court's memory. Your present designation admits you to the general register.</p>
+    <div class="codex-volume-toc-heading"><span>TABLE OF CONTENTS</span><span>FOLIOS</span></div>
+    <nav class="codex-volume-chapters" aria-label="Browse Codex chapters">
+      {chapters.map((ch,index)=><button class="codex-chapter-tab" data-filter={ch.key} aria-pressed={index===0?'true':'false'} type="button">
+       <span class="codex-chapter-numeral">{ch.number}</span>
+       <span class="codex-chapter-name"><strong>{ch.name}</strong><small>{ch.detail}</small></span>
+       <span class="codex-chapter-count">{String(ch.count).padStart(2,'0')} <span aria-hidden="true">→</span></span>
+      </button>)}
     </nav>
-    <div class="codex-result-line" aria-live="polite"><span id="codex-count">{codexRecords.length} records found</span><span class="section-caption">EXPLORE / READ / CONNECT</span></div>
-    <div id="codex-grid" class="codex-grid">
-      {codexRecords.map((entry,index) => (
-        <a class="codex-record" href={base + 'archive/' + entry.slug + '/'}
-          data-type={entry.kind}
-          data-album={entry.albumSlug}
-          data-search={(entry.title+' '+(entry.kind==='narration' ? entry.albumTitle+' '+entry.albumArc+' '+(archiveDesignation(entry.slug)?.identifier || '') : entry.summary+' '+entry.albumTitle)).toLowerCase()}>
-          <div class="codex-record-top"><span class="overline">{entry.kind==='narration' ? (archiveDesignation(entry.slug)?.label || 'ARCHIVE NARRATION') : typeName[entry.kind]}</span><span class="codex-record-number">{String(index+1).padStart(3,'0')}</span></div>
-          <h2>{entry.title}</h2>
-          <p>{entry.kind==='narration' ? ('Preserved testimony from '+entry.albumTitle+'. Open the folio to consult the full narration.') : entry.summary}</p>
-          <div class="codex-record-bottom"><span>{entry.albumTitle}</span><span aria-hidden="true">↗</span></div>
-        </a>
-      ))}
+    <aside class="codex-page-marginalia">A traveller without a name. A hall without a first stone. A first step spoken aloud. Three margins; one page.</aside>
+    <footer class="codex-volume-leaf-bottom"><span>READER DESIGNATION: INITIATE</span><span>I</span></footer>
+   </section>
+   <section class="codex-volume-leaf codex-volume-right" aria-labelledby="codex-register-title" id="codex-index">
+    <div class="codex-volume-running"><span>INDEX OF RECORDED MATTERS</span><span>CLEARANCE I</span></div>
+    <p class="volume-eyebrow">ACCESS GRANTED · GENERAL REGISTER</p>
+    <div class="codex-volume-heading">
+     <h2 id="codex-register-title">The open <em>index</em></h2>
+     <span class="codex-volume-signet" aria-hidden="true">✧</span>
     </div>
-    <p id="codex-empty" class="codex-empty" hidden>No matching records under this search. Try another designation or volume.</p>
-    <p class="codex-boundary">Some folios recount events beyond an Initiate's present studies. Their seals may be opened at the reader's discretion. The senior registers remain subject to higher clearance.</p>
-  </section>
-  <script is:inline>
-    (() => {
-      const discoveries = document.getElementById('unindexed-discovery');
-      try {
-        const marks = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
-        if (Array.isArray(marks) && [1,2,3].every(id => marks.includes(id))) discoveries.hidden = false;
-      } catch (_) { /* Browsers with blocked storage can still use the page links. */ }
-      const search = document.getElementById('codex-search');
-      const album = document.getElementById('codex-album');
-      const filters = [...document.querySelectorAll('.codex-filter')];
-      const cards = [...document.querySelectorAll('.codex-record')];
-      const count = document.getElementById('codex-count');
-      const empty = document.getElementById('codex-empty');
-      let kind = 'all';
-      const refresh = () => {
-        const q = (search.value || '').toLowerCase().trim();
-        let visible = 0;
-        for (const card of cards) {
-          const show = (kind === 'all' || card.dataset.type === kind)
-            && (album.value === 'all' || card.dataset.album === album.value)
-            && (!q || card.dataset.search.includes(q));
-          card.hidden = !show;
-          if(show) visible++;
-        }
-        count.textContent = visible + (visible === 1 ? ' record found' : ' records found');
-        empty.hidden = visible !== 0;
-      };
-      search.addEventListener('input', refresh);
-      album.addEventListener('change', refresh);
-      for (const button of filters) {
-        button.addEventListener('click', () => {
-          kind = button.dataset.filter;
-          for (const other of filters) other.setAttribute('aria-pressed', String(other === button));
-          refresh();
-        });
-      }
-    })();
-  </script>
+    <p class="codex-volume-blurb">Select a chapter from the facing page, or consult the register by name, subject or recorded designation.</p>
+    <div class="codex-embedded-search">
+      <label for="codex-search">CONSULT THE REGISTER</label>
+      <div class="codex-embedded-search-field"><span aria-hidden="true">⌕</span><input id="codex-search" type="search" placeholder="Search names, places, Archive numbers…" autocomplete="off"/></div>
+      <label for="codex-album">RELATED VOLUME</label>
+      <select id="codex-album">
+       <option value="all">All accessible volumes</option>
+       {albums.map(album=><option value={album.slug}>{album.arc} · {album.title}</option>)}
+      </select>
+    </div>
+    <div class="codex-page-index-heading"><span id="codex-selected-chapter">I · PEOPLE OF THE COURT</span><span id="codex-count" aria-live="polite">8 entries</span></div>
+    <div class="codex-folio-list" id="codex-list" aria-label="Accessible folios">
+     {codexRecords.map((entry,index)=>{
+       const designation = entry.kind==='narration' ? archiveDesignation(entry.slug) : undefined;
+       const idLabel = designation?.identifier ?? String(index+1).padStart(3,'0');
+       return <a class="codex-folio-row" href={base+'archive/'+entry.slug+'/'} data-type={entry.kind} data-album={entry.albumSlug}
+         data-search={(entry.title+' '+entry.albumTitle+' '+('albumArc' in entry ? entry.albumArc : '')+' '+('summary' in entry ? entry.summary : '')+' '+(designation?.identifier ?? '')).toLowerCase()}
+         hidden={entry.kind!=='character'}>
+         <span class="codex-folio-symbol" aria-hidden="true">{entry.kind==='character'?'♙':entry.kind==='location'?'⌂':entry.kind==='phenomenon'?'✧':'◈'}</span>
+         <span class="codex-folio-name"><strong>{entry.title}</strong><small>{entry.kind==='narration' ? entry.albumTitle : typeName[entry.kind]+' · '+entry.albumTitle}</small></span>
+         <span class="codex-folio-id">{idLabel}</span>
+       </a>;
+     })}
+    </div>
+    <p id="codex-empty" class="codex-no-entries" hidden>No folios meet the present enquiry. Try another term or volume.</p>
+    <aside class="codex-index-sealed" aria-label="Restricted senior archives">
+      <span aria-hidden="true">◇</span><p><strong>BEYOND THIS REGISTER</strong> Further records require the authority of a senior archivist.</p>
+    </aside>
+    <aside id="unindexed-discovery" class="codex-index-secret" hidden aria-live="polite">
+      <span aria-hidden="true">✧</span><p>An unnumbered leaf has been found between these pages.</p>
+      <a href={base+'archive/the-unindexed-record/'}>Consult the recovered folio →</a>
+    </aside>
+    <footer class="codex-volume-leaf-bottom"><span>THE RECORD ENDURES</span><span>II</span></footer>
+   </section>
+  </div>
+  <p class="codex-afterword">THE COURT PRESERVES WHAT CAN BE RECORDED. NOT EVERY PAGE HAS BEEN NUMBERED.</p>
+ </section>
+ <script is:inline>
+ (() => {
+   const volume = document.getElementById('codex-volume');
+   const cover = document.getElementById('codex-opening-cover');
+   if (volume && cover && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+     volume.classList.add('is-opening');
+     cover.addEventListener('animationend', () => {cover.hidden = true;volume.classList.remove('is-opening');}, {once:true});
+   }
+   const nav=[...document.querySelectorAll('.codex-chapter-tab')];
+   const rows=[...document.querySelectorAll('.codex-folio-row')];
+   const query=document.getElementById('codex-search');
+   const album=document.getElementById('codex-album');
+   const count=document.getElementById('codex-count');
+   const title=document.getElementById('codex-selected-chapter');
+   const empty=document.getElementById('codex-empty');
+   let active='character';
+   const filter=()=>{
+     const q=(query.value||'').toLocaleLowerCase().trim();
+     let found=0;
+     for(const row of rows){
+       const show=(active==='all'||row.dataset.type===active)
+         &&(album.value==='all'||row.dataset.album===album.value)
+         &&(!q||row.dataset.search.includes(q));
+       row.hidden=!show;
+       if(show)found++;
+     }
+     count.textContent=found+(found===1?' entry':' entries');
+     const selected=nav.find(x=>x.dataset.filter===active);
+     title.textContent=selected ? selected.querySelector('.codex-chapter-numeral').textContent+' · '+selected.querySelector('strong').textContent.toUpperCase() : 'GENERAL REGISTER';
+     empty.hidden=found!==0;
+   };
+   for(const button of nav)button.addEventListener('click',()=>{
+     active=button.dataset.filter;
+     for(const tab of nav)tab.setAttribute('aria-pressed', String(tab===button));
+     filter();
+     if(window.matchMedia('(max-width: 800px)').matches)document.getElementById('codex-index').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+   });
+   query.addEventListener('input',()=>{
+     if(query.value.trim() && active!=='all'){
+       active='all';
+       for(const tab of nav)tab.setAttribute('aria-pressed', String(tab.dataset.filter===active));
+     }
+     filter();
+   });
+   album.addEventListener('change',filter);
+   const discovery=document.getElementById('unindexed-discovery');
+   try {
+     const marks=JSON.parse(localStorage.getItem('meridian-court-folios-v1')||'[]');
+     if(Array.isArray(marks)&&[1,2,3].every(id=>marks.includes(id)))discovery.hidden=false;
+   }catch(_){}
+   filter();
+ })();
+ </script>
 </SiteLayout>
