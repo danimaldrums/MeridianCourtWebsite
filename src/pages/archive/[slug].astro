@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { codexRecords, codexBySlug, type CodexRecord } from '../../data/codex';
+import { archiveDesignation } from '../../data/archive-identifiers';
 import { arcs, chronicles } from '../../data/albums';
 export function getStaticPaths() {
   return codexRecords.map(record => ({ params: { slug: record.slug }, props: { record } }));
@@ -9,6 +10,7 @@ const { record } = Astro.props as { record: CodexRecord };
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',narration:'ARCHIVE NARRATION'};
 const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
+const designation = record.kind === 'narration' ? archiveDesignation(record.slug) : undefined;
 const related = record.kind === 'narration' ? [] : record.related.map(slug=>codexBySlug.get(slug)).filter((r):r is CodexRecord=>Boolean(r));
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
 ---
@@ -17,15 +19,15 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/'}>← Back to the Codex</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
     <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
       <article class="manuscript-page manuscript-left">
-        <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>FOLIO {record.kind==='narration' ? String(record.archiveNumber).padStart(2,'0') : '✧'}</span></header>
+        <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>{designation ? designation.label : 'FOLIO ✧'}</span></header>
         <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>
-        <p class="folio-eyebrow">{kindLabels[record.kind]} · PUBLISHED ACCOUNT</p>
+        <p class="folio-eyebrow">{kindLabels[record.kind]} · REGISTRY ACCESS I</p>
         <h1>{record.title}</h1>
         <div class="manuscript-art">
           {album && <img src={base + album.cover} alt={'Approved album artwork for '+album.title+'; thematic illustration, not a canonical portrait or depiction of this record'} width="360" height="360" loading="lazy"/>}
-          <span class="manuscript-plate-caption">ILLUSTRATION: {album ? album.title : 'PUBLIC ARCHIVE'}</span>
+          <span class="manuscript-plate-caption">ILLUSTRATION: {album ? album.title : 'COURT ARCHIVE'}</span>
         </div>
-        <p class="manuscript-opening">{record.kind === 'narration' ? ('Spoken record from '+record.albumTitle+'. Its text is reproduced from the released canonical Archive file.') : record.summary}</p>
+        <p class="manuscript-opening">{record.kind === 'narration' ? ('Recovered testimony · '+(designation?.label || 'ARCHIVE')+' · '+record.albumTitle+'.') : record.summary}</p>
         <div class="manuscript-provenance"><span>RECORDED IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
         {hiddenMark && <div class="manuscript-marginalia">
           <button type="button" class="folio-mark" data-folio-number={hiddenMark.number} data-folio-fragment={hiddenMark.fragment} aria-label={'Examine unusual marginal mark '+hiddenMark.label} aria-expanded="false">✧<span class="folio-mark-dot" aria-hidden="true">◈</span></button>
@@ -40,29 +42,38 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
         <footer class="manuscript-page-footer"><span>THE RECORD ENDURES</span><span>Ⅰ</span></footer>
       </article>
       <article class="manuscript-page manuscript-right">
-        <header class="manuscript-page-header"><span>{record.kind==='narration' ? 'RECOVERED NARRATION' : 'HISTORICAL REFERENCE'}</span><span>CONTINUED</span></header>
+        <header class="manuscript-page-header"><span>{record.kind==='narration' ? (designation?.label || 'RECOVERED NARRATION') : 'HISTORICAL REFERENCE'}</span><span>CONTINUED</span></header>
         <div class="manuscript-decor manuscript-crest" aria-hidden="true"><span>◇</span></div>
         <h2>{record.kind === 'narration' ? 'The spoken record' : 'What is known'}</h2>
-        <p class="manuscript-lede">{record.kind==='narration' ? 'The words remain in the order preserved by the published Archive.' : 'An account drawn only from the public story. Some of its questions remain open.'}</p>
+        <p class="manuscript-lede">{record.kind==='narration' ? 'The words follow the sequence in which they were preserved in the Archive.' : 'A record of people, places and events known to the Court. Not every question has an answer.'}</p>
         <details class="manuscript-disclosure">
           <summary>{record.kind==='narration' ? 'Unseal the original narration' : 'Read the full account'} <span aria-hidden="true">⌄</span></summary>
-          <p class="manuscript-spoiler">This page contains narrative revelations from a released album.</p>
+          <p class="manuscript-spoiler">READER'S CAUTION · The following account may reveal events beyond your current place in the chronology.</p>
           {record.kind==='narration'
             ? <pre class="manuscript-transcript">{record.body}</pre>
             : <div class="manuscript-prose">{record.body.map(paragraph=><p>{paragraph}</p>)}</div>}
         </details>
         <div class="manuscript-aside">
           <span class="folio-eyebrow">A NOTE IN THE MARGIN</span>
-          <p>{record.kind==='narration' ? 'The Archive keeps the spoken record as it appears in the source manuscript. Stage directions may be retained in brackets.' : 'No undocumented past, identity or connection is treated as established fact.'}</p>
+          <p>{record.kind==='narration' ? 'Atmosphere and voice notation, where recorded, remain alongside the testimony.' : 'Where the records hold no answer, the margin remains unfilled.'}</p>
         </div>
         <footer class="manuscript-page-footer"><span>READ WHAT IS WRITTEN</span><span>Ⅱ</span></footer>
       </article>
     </div>
+    <aside class="court-clearance-panel" aria-label="Restricted senior registry">
+      <span class="court-clearance-glyph" aria-hidden="true">◇</span>
+      <div>
+        <p class="overline">SENIOR REGISTRY · RESTRICTED ANNEX</p>
+        <h2>Further access requires higher clearance.</h2>
+        <p>Your current designation allows consultation of this folio. Supplementary registers may only be examined under the authority of a senior archivist.</p>
+      </div>
+      <span class="court-clearance-stamp">CLEARANCE II REQUIRED</span>
+    </aside>
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
       <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item"><span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span></a>)}</div>
     </section>}
-    <p class="codex-footnote">The original published work is the canonical source. These reference pages do not establish events beyond it.</p>
+    <p class="codex-footnote">MERIDIAN CODEX · GENERAL REGISTRY · END OF ACCESSIBLE ENTRY</p>
     <a class="button button-outline" href={base+'archive/'}>Return to the Codex ↗</a>
   </section>
   <script is:inline>

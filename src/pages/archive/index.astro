@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { codexRecords } from '../../data/codex';
+import { archiveDesignation } from '../../data/archive-identifiers';
 import { arcs, chronicles } from '../../data/albums';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const albums = [ ...arcs, ...chronicles ];
@@ -33,7 +34,7 @@ const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE N
       </div>
     </div>
     <div class="codex-intro-page">
-      <p class="folio-eyebrow">VOLUME I &nbsp; / &nbsp; PUBLIC RECORDS</p>
+      <p class="folio-eyebrow">VOLUME I &nbsp; / &nbsp; COURT REGISTRY</p>
       <span class="codex-intro-emblem" aria-hidden="true">✧</span>
       <h2>Open the <em>Archive</em></h2>
       <p>Walk the corridors of the Meridian Court. Follow a life across the centuries, revisit a forgotten place, or open the words preserved between the songs.</p>
@@ -45,14 +46,23 @@ const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE N
       </div>
       <p class="codex-hint">A traveller without a name. A hall without a first stone. A first step spoken aloud.<br/>Three margins; one page.</p>
       <a class="codex-open-link" href="#codex-index">Turn to the Index <span aria-hidden="true">↓</span></a>
-      <div class="codex-intro-bottom"><span>CURATED FROM RELEASED CANON</span><span>EST. ✧</span></div>
+      <div class="codex-intro-bottom"><span>READING ACCESS · INITIATE</span><span>EST. ✧</span></div>
     </div>
   </section>
   <section id="codex-index" class="content-shell codex-content">
+    <aside class="court-access-status" aria-label="Reader authorisation">
+      <span class="court-access-seal" aria-hidden="true">✧</span>
+      <div class="court-access-description">
+        <p class="overline">MERIDIAN COURT · REGISTRY ACCESS</p>
+        <h2>Welcome, Initiate.</h2>
+        <p>Your reading designation permits consultation of the general Codex. Certain annexes remain sealed under the authority of senior archivists.</p>
+      </div>
+      <span class="court-access-tier">CLEARANCE I · ACCESS GRANTED</span>
+    </aside>
     <div class="codex-index-head">
       <p class="overline">THE OPEN INDEX</p>
       <h2>Find a record</h2>
-      <p>Search the publicly released story. The Archive preserves what has been established, while leaving its unanswered questions intact.</p>
+      <p>The Court's general registers stand open to your designation. Names, places and remembered testimony await examination.</p>
     </div>
     <aside id="unindexed-discovery" class="codex-unindexed-discovery" hidden aria-live="polite">
       <span aria-hidden="true">✧</span>
@@ -67,7 +77,7 @@ const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE N
       <label class="codex-field codex-album-filter">
         <span class="overline">ALBUM / CHRONICLE</span>
         <select id="codex-album" aria-label="Filter Archive by album">
-          <option value="all">All released chapters</option>
+          <option value="all">All accessible volumes</option>
           {albums.map(album => <option value={album.slug}>{album.arc} · {album.title}</option>)}
         </select>
       </label>
@@ -81,16 +91,16 @@ const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE N
         <a class="codex-record" href={base + 'archive/' + entry.slug + '/'}
           data-type={entry.kind}
           data-album={entry.albumSlug}
-          data-search={(entry.title+' '+(entry.kind==='narration' ? entry.albumTitle+' '+entry.albumArc : entry.summary+' '+entry.albumTitle)).toLowerCase()}>
-          <div class="codex-record-top"><span class="overline">{typeName[entry.kind]}</span><span class="codex-record-number">{String(index+1).padStart(3,'0')}</span></div>
+          data-search={(entry.title+' '+(entry.kind==='narration' ? entry.albumTitle+' '+entry.albumArc+' '+(archiveDesignation(entry.slug)?.identifier || '') : entry.summary+' '+entry.albumTitle)).toLowerCase()}>
+          <div class="codex-record-top"><span class="overline">{entry.kind==='narration' ? (archiveDesignation(entry.slug)?.label || 'ARCHIVE NARRATION') : typeName[entry.kind]}</span><span class="codex-record-number">{String(index+1).padStart(3,'0')}</span></div>
           <h2>{entry.title}</h2>
-          <p>{entry.kind==='narration' ? ('Read the original spoken Archive '+String(entry.archiveNumber).padStart(2,'0')+' from '+entry.albumTitle+'.') : entry.summary}</p>
+          <p>{entry.kind==='narration' ? ('Preserved testimony from '+entry.albumTitle+'. Open the folio to consult the full narration.') : entry.summary}</p>
           <div class="codex-record-bottom"><span>{entry.albumTitle}</span><span aria-hidden="true">↗</span></div>
         </a>
       ))}
     </div>
-    <p id="codex-empty" class="codex-empty" hidden>No matching public records. Try another search or chapter.</p>
-    <p class="codex-boundary">Archive narrations contain story revelations. Individual records open with a spoiler-aware reading view. This public Codex does not include unreleased albums, production prompts or undecided history.</p>
+    <p id="codex-empty" class="codex-empty" hidden>No matching records under this search. Try another designation or volume.</p>
+    <p class="codex-boundary">Some folios recount events beyond an Initiate's present studies. Their seals may be opened at the reader's discretion. The senior registers remain subject to higher clearance.</p>
   </section>
   <script is:inline>
     (() => {

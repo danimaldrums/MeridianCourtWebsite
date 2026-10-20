@@ -18,8 +18,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <section id="sealed-record" class="unindexed-seal" aria-live="polite">
       <span class="unindexed-lock" aria-hidden="true">◇</span>
       <h2>The folio remains sealed</h2>
-      <p id="unindexed-counter">The record is opened by following three marks in the margins of the public Codex.</p>
-      <a class="button button-outline" href={base+'archive/'}>Return to the public index ↗</a>
+      <p id="unindexed-counter">The record may be opened only after three marks have been traced through the Court's general registers.</p>
+      <a class="button button-outline" href={base+'archive/'}>Return to the Court index ↗</a>
     </section>
     <div id="revealed-record" hidden>
       <div class="manuscript-book unindexed-manuscript">
@@ -58,7 +58,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
           <footer class="manuscript-page-footer"><span>WHO LIT IT? FOR WHOM?</span><span>—</span></footer>
         </article>
       </div>
-      <p class="unindexed-disclaimer">NEW WEBSITE-EXCLUSIVE MYSTERY · This recovered text is deliberately of uncertain origin. It does not establish a connection to the Celestial Engine, the Fractures, the Court or an unreleased album. Any wider interpretation remains open.</p>
+      <p class="unindexed-disclaimer">REGISTRY NOTICE · PROVENANCE UNCONFIRMED · This recovered testimony is unverified. No origin, era, author or connection to an established event has been authenticated. Interpretation is withheld.</p>
       <a class="button button-outline" href={base+'archive/'}>Close the folio ↗</a>
     </div>
   </section>
@@ -74,7 +74,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
           sealed.hidden = true;
           revealed.hidden = false;
         } else {
-          counter.textContent = found + ' of 3 marginal marks found. The remainder can be discovered by reading the public Codex.';
+          counter.textContent = found + ' of 3 marginal marks recovered. The remainder is hidden among the Court's general registers.';
         }
       } catch (_) {
         counter.textContent = 'This reader could not retain the marks. Please enable local storage and revisit the marginal notes to open the folio.';
