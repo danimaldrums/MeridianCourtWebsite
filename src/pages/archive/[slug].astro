@@ -10,44 +10,89 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',narration:'ARCHIVE NARRATION'};
 const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
 const related = record.kind === 'narration' ? [] : record.related.map(slug=>codexBySlug.get(slug)).filter((r):r is CodexRecord=>Boolean(r));
+const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
 ---
 <SiteLayout title={record.title} current="archive">
-  <section class="content-shell codex-detail">
-    <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/'}>← Back to the Archive</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
-    <div class="codex-detail-head">
-      <div class="codex-detail-intro">
-        <p class="overline">{kindLabels[record.kind]} · PUBLISHED RECORD</p>
+  <section class="content-shell codex-detail manuscript-detail">
+    <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/'}>← Back to the Codex</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
+    <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
+      <article class="manuscript-page manuscript-left">
+        <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>FOLIO {record.kind==='narration' ? String(record.archiveNumber).padStart(2,'0') : '✧'}</span></header>
+        <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>
+        <p class="folio-eyebrow">{kindLabels[record.kind]} · PUBLISHED ACCOUNT</p>
         <h1>{record.title}</h1>
-        <p class="codex-detail-lede">{record.kind === 'narration' ? ('The original narration from '+record.albumTitle+'. Preserved from the released album Archive.') : record.summary}</p>
-        <div class="codex-provenance"><span>APPEARS IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
-      </div>
-      {album && <a class="codex-detail-art" href={base+'music/#'+album.slug} aria-label={'Discover '+album.title}><img src={base+album.cover} alt={'Approved artwork for '+album.title} width="420" height="420" loading="lazy"/></a>}
-    </div>
-    <div class="codex-reading-shell">
-      <div class="codex-reading-heading"><span class="overline">THE PUBLIC RECORD</span><span class="section-caption">{record.kind === 'narration' ? ('ARCHIVE '+String(record.archiveNumber).padStart(2,'0')) : 'RELEASED CANON ONLY'}</span></div>
-      {record.kind === 'narration' ? (
-        <details class="codex-reveal">
-          <summary>Read the original Archive narration <span aria-hidden="true">⌄</span></summary>
-          <p class="codex-spoiler">Story spoilers ahead. The wording below is preserved from the released canonical narration file; performance cues may appear in brackets.</p>
-          <pre class="codex-transcript">{record.body}</pre>
-        </details>
-      ) : (
-        <details class="codex-reveal">
-          <summary>Open the full record <span aria-hidden="true">⌄</span></summary>
-          <p class="codex-spoiler">This entry describes events from a released album and may contain spoilers.</p>
-          <div class="codex-paragraphs">{record.body.map(paragraph => <p>{paragraph}</p>)}</div>
-        </details>
-      )}
-    </div>
-    {related.length > 0 && (
-      <section class="codex-connections" aria-label="Connected records">
-        <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">RELATED PUBLIC RECORDS</span></div>
-        <div class="codex-related-grid">
-          {related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item"><span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span></a>)}
+        <div class="manuscript-art">
+          {album && <img src={base + album.cover} alt={'Approved album artwork for '+album.title+'; thematic illustration, not a canonical portrait or depiction of this record'} width="360" height="360" loading="lazy"/>}
+          <span class="manuscript-plate-caption">ILLUSTRATION: {album ? album.title : 'PUBLIC ARCHIVE'}</span>
         </div>
-      </section>
-    )}
-    <p class="codex-footnote">The Meridian Court Archive distinguishes what has been recorded from what remains unresolved. Public reference summaries do not establish new canon.</p>
-    <a class="button button-outline" href={base + 'archive/'}>Return to the Codex <span aria-hidden="true">↗</span></a>
+        <p class="manuscript-opening">{record.kind === 'narration' ? ('Spoken record from '+record.albumTitle+'. Its text is reproduced from the released canonical Archive file.') : record.summary}</p>
+        <div class="manuscript-provenance"><span>RECORDED IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
+        {hiddenMark && <div class="manuscript-marginalia">
+          <button type="button" class="folio-mark" data-folio-number={hiddenMark.number} data-folio-fragment={hiddenMark.fragment} aria-label={'Examine unusual marginal mark '+hiddenMark.label} aria-expanded="false">✧<span class="folio-mark-dot" aria-hidden="true">◈</span></button>
+          <span class="folio-margin-caption">A mark in the margin. <em>It does not belong to this sequence.</em></span>
+          <div class="folio-fragment" hidden aria-live="polite">
+            <span>FRAGMENT {hiddenMark.label} / III</span>
+            <strong>{hiddenMark.fragment}</strong>
+            <small class="folio-progress"></small>
+            <a class="folio-last-link" href={base+'archive/the-unindexed-record/'} hidden>Assemble the unindexed folio ↗</a>
+          </div>
+        </div>}
+        <footer class="manuscript-page-footer"><span>THE RECORD ENDURES</span><span>Ⅰ</span></footer>
+      </article>
+      <article class="manuscript-page manuscript-right">
+        <header class="manuscript-page-header"><span>{record.kind==='narration' ? 'RECOVERED NARRATION' : 'HISTORICAL REFERENCE'}</span><span>CONTINUED</span></header>
+        <div class="manuscript-decor manuscript-crest" aria-hidden="true"><span>◇</span></div>
+        <h2>{record.kind === 'narration' ? 'The spoken record' : 'What is known'}</h2>
+        <p class="manuscript-lede">{record.kind==='narration' ? 'The words remain in the order preserved by the published Archive.' : 'An account drawn only from the public story. Some of its questions remain open.'}</p>
+        <details class="manuscript-disclosure">
+          <summary>{record.kind==='narration' ? 'Unseal the original narration' : 'Read the full account'} <span aria-hidden="true">⌄</span></summary>
+          <p class="manuscript-spoiler">This page contains narrative revelations from a released album.</p>
+          {record.kind==='narration'
+            ? <pre class="manuscript-transcript">{record.body}</pre>
+            : <div class="manuscript-prose">{record.body.map(paragraph=><p>{paragraph}</p>)}</div>}
+        </details>
+        <div class="manuscript-aside">
+          <span class="folio-eyebrow">A NOTE IN THE MARGIN</span>
+          <p>{record.kind==='narration' ? 'The Archive keeps the spoken record as it appears in the source manuscript. Stage directions may be retained in brackets.' : 'No undocumented past, identity or connection is treated as established fact.'}</p>
+        </div>
+        <footer class="manuscript-page-footer"><span>READ WHAT IS WRITTEN</span><span>Ⅱ</span></footer>
+      </article>
+    </div>
+    {related.length>0 && <section class="codex-connections" aria-label="Connected records">
+      <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
+      <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item"><span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span></a>)}</div>
+    </section>}
+    <p class="codex-footnote">The original published work is the canonical source. These reference pages do not establish events beyond it.</p>
+    <a class="button button-outline" href={base+'archive/'}>Return to the Codex ↗</a>
   </section>
+  <script is:inline>
+    (() => {
+      const button = document.querySelector('[data-folio-number]');
+      if (!button) return;
+      const panel = document.querySelector('.folio-fragment');
+      const lastLink = document.querySelector('.folio-last-link');
+      const progress = document.querySelector('.folio-progress');
+      const key = 'meridian-court-folios-v1';
+      const read = () => {
+        try { const saved = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(saved) ? saved.filter(x => [1,2,3].includes(x)) : []; }
+        catch (_) { return []; }
+      };
+      const show = () => {
+        const marks = read();
+        panel.hidden = false;
+        button.setAttribute('aria-expanded', 'true');
+        progress.textContent = marks.length+' of 3 marginal marks observed.';
+        if ([1,2,3].every(id => marks.includes(id))) lastLink.hidden = false;
+      };
+      if (read().includes(Number(button.dataset.folioNumber))) show();
+      button.addEventListener('click', () => {
+        const marks = read();
+        const id = Number(button.dataset.folioNumber);
+        if (!marks.includes(id)) marks.push(id);
+        try { localStorage.setItem(key, JSON.stringify(marks)); } catch (_) {}
+        show();
+        if (lastLink.hidden === false) lastLink.focus();
+      });
+    })();
+  </script>
 </SiteLayout>

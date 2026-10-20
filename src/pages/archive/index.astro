@@ -20,23 +20,43 @@ const counts = {
 const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE NARRATION',phenomenon:'PHENOMENON'};
 ---
 <SiteLayout title="The Archive" current="archive">
-  <section class="page-heading content-shell codex-heading">
-    <p class="overline">THE MERIDIAN CODEX / PUBLIC RECORDS</p>
-    <h1>The <em>Archive</em></h1>
-    <p>Every life leaves an impression. Every place holds a history. Search the published records, follow the connections, and return to the words preserved between the songs.</p>
-    <div class="codex-tallies" aria-label="Archive index totals">
-      <span><strong>{counts.character}</strong> characters</span>
-      <span><strong>{counts.location}</strong> locations</span>
-      <span><strong>{counts.narration}</strong> narrated Archives</span>
-      <span><strong>{counts.phenomenon}</strong> phenomena</span>
+  <section class="codex-cover-intro content-shell" aria-labelledby="codex-title">
+    <div class="codex-cover" aria-label="The Meridian Codex">
+      <div class="codex-cover-frame">
+        <p class="codex-cover-kicker">A COMPANION TO THE MERIDIAN COURT SAGA</p>
+        <img class="codex-cover-logo" src={base + 'images/meridian-court-logo.webp'} alt="Meridian Court official logo" width="240" height="240"/>
+        <span class="codex-cover-rule" aria-hidden="true">✧ ───── ◈ ───── ✧</span>
+        <h1 id="codex-title">The <em>Meridian</em> Codex</h1>
+        <p class="codex-cover-caption">PEOPLE · PLACES · RECOVERED WORDS</p>
+        <p class="codex-cover-epigraph">Every page is a doorway. Not every doorway appears in the index.</p>
+        <span class="codex-cover-clock" aria-hidden="true">Ⅰ &nbsp; · &nbsp; Ⅻ &nbsp; · &nbsp; Ⅰ</span>
+      </div>
+    </div>
+    <div class="codex-intro-page">
+      <p class="folio-eyebrow">VOLUME I &nbsp; / &nbsp; PUBLIC RECORDS</p>
+      <span class="codex-intro-emblem" aria-hidden="true">✧</span>
+      <h2>Open the <em>Archive</em></h2>
+      <p>Walk the corridors of the Meridian Court. Follow a life across the centuries, revisit a forgotten place, or open the words preserved between the songs.</p>
+      <div class="codex-tallies" aria-label="Archive index totals">
+        <span><strong>{counts.character}</strong> characters</span>
+        <span><strong>{counts.location}</strong> locations</span>
+        <span><strong>{counts.narration}</strong> narrations</span>
+        <span><strong>{counts.phenomenon}</strong> phenomena</span>
+      </div>
+      <div class="codex-intro-bottom"><span>CURATED FROM RELEASED CANON</span><span>EST. ✧</span></div>
     </div>
   </section>
   <section class="content-shell codex-content">
-    <div class="archive-manifesto codex-manifesto">
-      <span class="archive-sigil" aria-hidden="true">✧</span>
-      <p>“Protect possibility. Honour choice. Live with consequence.”</p>
-      <span class="section-caption">Only publicly released canon is indexed. The unknown remains unknown.</span>
+    <div class="codex-index-head">
+      <p class="overline">THE OPEN INDEX</p>
+      <h2>Find a record</h2>
+      <p>Search the publicly released story. The Archive preserves what has been established, while leaving its unanswered questions intact.</p>
     </div>
+    <aside id="unindexed-discovery" class="codex-unindexed-discovery" hidden aria-live="polite">
+      <span aria-hidden="true">✧</span>
+      <p>A loose folio has been recovered.</p>
+      <a href={base + 'archive/the-unindexed-record/'}>Open the unindexed page ↗</a>
+    </aside>
     <div class="codex-toolbar">
       <label class="codex-field">
         <span class="overline">SEARCH THE CODEX</span>
@@ -72,6 +92,11 @@ const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE N
   </section>
   <script is:inline>
     (() => {
+      const discoveries = document.getElementById('unindexed-discovery');
+      try {
+        const marks = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
+        if (Array.isArray(marks) && [1,2,3].every(id => marks.includes(id))) discoveries.hidden = false;
+      } catch (_) { /* Browsers with blocked storage can still use the page links. */ }
       const search = document.getElementById('codex-search');
       const album = document.getElementById('codex-album');
       const filters = [...document.querySelectorAll('.codex-filter')];
