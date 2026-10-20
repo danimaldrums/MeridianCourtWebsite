@@ -81,7 +81,7 @@
  .codex-opening-cover{transform-origin:left center}
  .codex-volume-left h1{font-size:clamp(62px,12vw,91px)}
  .codex-volume-right h2{font-size:clamp(50px,10vw,74px)}
- .codex-folio-list{max-height:590px}
+ .codex-folio-list{max-height:none;overflow:visible}
 }
 @media(max-width:520px){
  .volume-entry-overline{font-size:8px;letter-spacing:.14em}
