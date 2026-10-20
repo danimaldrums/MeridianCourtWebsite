@@ -365,3 +365,39 @@ h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;
   .manuscript-page-footer {padding-top:25px;}
 }
 @media(prefers-reduced-motion:reduce){.codex-record {transition:none;}}
+
+
+/* Unindexed Record — isolated, website-exclusive mystery with an explicit unverified provenance. */
+.unindexed-stage {padding-top:38px;padding-bottom:125px;}
+.unindexed-header {text-align:center;margin:85px auto 53px;max-width:810px;}
+.unindexed-header h1 {font-size:clamp(68px,9vw,128px);line-height:.82;letter-spacing:-.045em;color:#eee0cb;margin:11px 0 33px;}
+.unindexed-header>p:last-child {font-size:13px;line-height:1.9;color:var(--muted);max-width:650px;margin:auto;}
+.unindexed-emblem {display:block;color:#bd9c69;font-size:74px;line-height:1;}
+.unindexed-seal {border:1px solid #9c7e55;text-align:center;padding:72px 30px;max-width:850px;margin:auto;background:radial-gradient(ellipse at 50% 8%,#a17a3e29,transparent 65%),#18191b;}
+.unindexed-seal[hidden],#revealed-record[hidden] {display:none!important;}
+.unindexed-lock {font-size:60px;color:#b38e58;}
+.unindexed-seal h2 {color:#e5d4b6;font-size:clamp(47px,5vw,70px);margin:16px 0;}
+.unindexed-seal p {font-size:13px;line-height:1.9;color:#cabda9;max-width:560px;margin:0 auto 30px;}
+.unindexed-manuscript {margin:30px 0;}
+.unindexed-page-mark {display:block;text-align:center;font-size:80px;line-height:1;color:#806039;margin:38px auto 34px;}
+.unindexed-page h2 {font-size:clamp(48px,5vw,72px);line-height:.88;color:#3c2c1a;margin:10px 0 25px;}
+.unindexed-page h2 em {color:#85582c;}
+.unindexed-page .folio-eyebrow {margin:0 0 20px;}
+.unindexed-illustration {height:265px;position:relative;overflow:hidden;margin:22px 0 31px;border:1px solid #89653d;box-shadow:inset 0 0 70px #231b17;background:radial-gradient(ellipse at 52% 24%,#e2ba7b26,#101821 65%,#0f1014);}
+.unindexed-illustration:before {content:"";position:absolute;inset:9px;border:1px solid #c49a5b50;}
+.unindexed-halo {position:absolute;left:50%;top:18%;width:90px;height:90px;border:1px solid #b8966890;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 30px #f7d0931e;}
+.unindexed-light {position:absolute;left:50%;top:35%;width:9px;height:9px;background:#fbe2ac;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px 7px #eed49c8c,0 0 40px 14px #bd8a4d44;}
+.unindexed-line {position:absolute;top:65%;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,#ddbd8e94,transparent);}
+.unindexed-door {position:absolute;top:65%;left:calc(50% - 15px);width:30px;height:48px;border:1px solid #ab8556;border-bottom:0;box-shadow:0 0 11px #c5a66c44;}
+.unindexed-prelude {font:22px/1.33 'Cormorant Garamond',Georgia,serif;color:#4a3523;}
+.unindexed-page-note {padding-top:22px;border-top:1px solid #846540a1;color:#71553b;font-size:9px;letter-spacing:.13em;display:flex;justify-content:space-between;gap:10px;}
+.unindexed-page .manuscript-decor {margin:15px auto 18px;}
+.unindexed-page.manuscript-right h2 {font-size:clamp(41px,4.3vw,61px);}
+.unindexed-narrative p {font:22px/1.35 'Cormorant Garamond',Georgia,serif;color:#342518;margin:0 0 18px;}
+.unindexed-narrative p:first-child:first-letter {float:left;font:600 63px/.75 'Cormorant Garamond',Georgia,serif;margin-right:6px;color:#86572b;}
+.unindexed-narrative blockquote {margin:22px 0;padding:19px 16px;border-top:1px solid #936b4388;border-bottom:1px solid #936b4388;text-align:center;color:#583817;font:600 18px/1.55 'Cormorant Garamond',Georgia,serif;letter-spacing:.045em;}
+.unindexed-final-mark {display:flex;gap:19px;align-items:center;border:1px solid #9a794f99;padding:15px;margin-top:8px;}
+.unindexed-final-mark span {font-size:51px;line-height:1;color:#7b522c;}
+.unindexed-final-mark p {font:italic 19px/1.2 'Cormorant Garamond',Georgia,serif;margin:0;color:#573e27;}
+.unindexed-disclaimer {max-width:900px;margin:0 auto 31px;color:#ae9f89;font-size:11px;line-height:1.9;}
+@media(max-width:700px){.unindexed-header {margin:51px auto 38px;}.unindexed-header h1 {font-size:clamp(59px,12vw,85px);}.unindexed-stage {padding-top:28px;}.unindexed-seal {padding:44px 22px;}.unindexed-illustration {height:225px;}.unindexed-narrative p {font-size:23px;}.unindexed-page h2 {font-size:56px;}}

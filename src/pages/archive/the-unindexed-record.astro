@@ -1,0 +1,84 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<SiteLayout title="The Unindexed Record" current="archive" description="An unindexed folio. Provenance unknown.">
+  <section class="content-shell unindexed-stage">
+    <nav class="codex-breadcrumb" aria-label="Breadcrumb">
+      <a href={base+'archive/'}>← Return to the Codex</a>
+      <span aria-hidden="true">/</span>
+      <span>UNINDEXED</span>
+    </nav>
+    <header class="unindexed-header">
+      <p class="overline">NO SHELF · NO NUMBER · NO RECORDED ORIGIN</p>
+      <span aria-hidden="true" class="unindexed-emblem">◌</span>
+      <h1>The Unindexed <em>Record</em></h1>
+      <p>A page not found in the ordinary index. Its contents have never been reconciled with the published record.</p>
+    </header>
+    <section id="sealed-record" class="unindexed-seal" aria-live="polite">
+      <span class="unindexed-lock" aria-hidden="true">◇</span>
+      <h2>The folio remains sealed</h2>
+      <p id="unindexed-counter">The record is opened by following three marks in the margins of the public Codex.</p>
+      <a class="button button-outline" href={base+'archive/'}>Return to the public index ↗</a>
+    </section>
+    <div id="revealed-record" hidden>
+      <div class="manuscript-book unindexed-manuscript">
+        <article class="manuscript-page manuscript-left unindexed-page">
+          <header class="manuscript-page-header"><span>RECOVERED LEAF</span><span>FOLIO —</span></header>
+          <span class="unindexed-page-mark" aria-hidden="true">◌</span>
+          <p class="folio-eyebrow">RECORD CLASS: UNVERIFIED / NO ASSIGNED ERA</p>
+          <h2>The Shoreless <em>Light</em></h2>
+          <div class="unindexed-illustration" aria-label="Abstract drawing of a single light above an empty horizon" role="img">
+            <span class="unindexed-halo"></span><span class="unindexed-light"></span><span class="unindexed-line"></span>
+            <span class="unindexed-door"></span>
+          </div>
+          <p class="unindexed-prelude">The leaf was found folded into the binding of an otherwise unmarked volume.</p>
+          <p class="unindexed-prelude">No author, place, date or recognised provenance appears upon it. The following words are preserved as an <em>unverified testimony</em>, not an established account of Court history.</p>
+          <div class="unindexed-page-note"><span>OBSERVATION UNKNOWN</span><span>ORIGIN UNCONFIRMED</span></div>
+          <footer class="manuscript-page-footer"><span>NOT ALL PAGES ARE NUMBERED</span><span>—</span></footer>
+        </article>
+        <article class="manuscript-page manuscript-right unindexed-page">
+          <header class="manuscript-page-header"><span>THE UNINDEXED RECORD</span><span>CONTINUED</span></header>
+          <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>
+          <h2>A testimony without a witness</h2>
+          <div class="unindexed-narrative">
+            <p>We were sent to measure the light.</p>
+            <p>There was no shore. No water. No settlement. Only a darkness interrupted by one steady point at the edge of every instrument.</p>
+            <p>When we turned to mark its position, the point vanished. When we laid our pens down, it returned.</p>
+            <p>Someone called it a lantern. Nothing held it aloft.</p>
+            <p>The third observer drew a narrow doorway beneath the light. The first two swore there had been no door.</p>
+            <p>The doorway was too small for a person.</p>
+            <p>It was open.</p>
+            <p>We saw nothing come through.</p>
+            <p>On the final sheet, in a hand unlike the rest:</p>
+            <blockquote>THIS WAS NEVER A LIGHT FOR TRAVELLERS.<br/>IT WAS LEFT BURNING SO THAT SOMETHING COULD FIND ITS WAY BACK.</blockquote>
+            <p>The ink continues after that sentence. The words do not.</p>
+          </div>
+          <div class="unindexed-final-mark"><span aria-hidden="true">◌</span><p>A circle interrupted in three places. No other leaf in the volume bears this sign.</p></div>
+          <footer class="manuscript-page-footer"><span>WHO LIT IT? FOR WHOM?</span><span>—</span></footer>
+        </article>
+      </div>
+      <p class="unindexed-disclaimer">NEW WEBSITE-EXCLUSIVE MYSTERY · This recovered text is deliberately of uncertain origin. It does not establish a connection to the Celestial Engine, the Fractures, the Court or an unreleased album. Any wider interpretation remains open.</p>
+      <a class="button button-outline" href={base+'archive/'}>Close the folio ↗</a>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const sealed = document.getElementById('sealed-record');
+      const revealed = document.getElementById('revealed-record');
+      const counter = document.getElementById('unindexed-counter');
+      try {
+        const entries = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
+        const found = Array.isArray(entries) ? [1,2,3].filter(n => entries.includes(n)).length : 0;
+        if (found === 3) {
+          sealed.hidden = true;
+          revealed.hidden = false;
+        } else {
+          counter.textContent = found + ' of 3 marginal marks found. The remainder can be discovered by reading the public Codex.';
+        }
+      } catch (_) {
+        counter.textContent = 'This reader could not retain the marks. Please enable local storage and revisit the marginal notes to open the folio.';
+      }
+    })();
+  </script>
+</SiteLayout>

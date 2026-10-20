@@ -43,4 +43,13 @@ The public Archive is now a curated search index of released character, location
 
 Readers must actively open spoiler-aware record panels. The reference entries are editorial summaries of released source, not independent canon. They must be corrected against the canonical source if it changes. All 35 narrations should receive a human cross-check against released audio before claiming word-for-word audio equivalence; notably the Locked Canon file for **Arc I — The First Page** contains only a very short script.
 
-**Secret material:** no new fictional revelation, future album hint or hidden narrative payload should be added to the public GitHub repo until the creator separately approves both its actual wording and canon status. A concealed client-side message is discoverable in publicly hosted HTML/JavaScript and cannot be treated as confidential.
+**Secret material:** New hidden-fiction material may be prototyped only at the creator's explicit request; until reviewed it is presented as unverified in-world testimony, not promoted to Locked Canon. A concealed client-side message is discoverable in publicly hosted HTML/JavaScript and is never confidential.
+
+
+## Website-only Unindexed Record prototype (2026-10-20)
+
+The creator requested an original **new** hidden mystery, plus a parchment-and-black-gold Codex inspired by two **old, non-authoritative visual references**. The images' former character descriptions, law names and implied events are NOT canonical sources.
+
+The hidden three-mark route is seeded into the published Seeker character page, Hall of Architects location page and Arc I Archive I reading page; collecting all three browser-local marks makes an unlisted route readable. Mark progress is stored only in this browser, without account services or tracking. Browser source can be inspected; this is a discoverable story puzzle, **not** a security boundary.
+
+**The Unindexed Record — The Shoreless Light** is new, original website-exclusive story material written for this experiment. Its supposed testimony is **unverified within the fiction** and is not presented as a discovered fact about any established Court era, institution, place, character or system. It is not automatically Locked Canon. The creator may approve, revise or decline its future narrative consequences. No unreleased Arc, Chronicle, lyrics or novel text is reproduced in it.
