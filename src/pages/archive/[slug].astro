@@ -1,7 +1,7 @@
 ---
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { codexRecords, codexBySlug, type CodexRecord } from '../../../data/codex';
-import { arcs, chronicles } from '../../../data/albums';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { codexRecords, codexBySlug, type CodexRecord } from '../../data/codex';
+import { arcs, chronicles } from '../../data/albums';
 export function getStaticPaths() {
   return codexRecords.map(record => ({ params: { slug: record.slug }, props: { record } }));
 }
