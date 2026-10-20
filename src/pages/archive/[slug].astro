@@ -19,7 +19,7 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 ---
 <SiteLayout title={record.title} current="archive">
   <section class="content-shell codex-detail manuscript-detail">
-    <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/'}>← Back to the Codex</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
+    <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/?chapter=' + record.kind + '#codex-index'}>← Back to the Codex</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
     <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
       <article class="manuscript-page manuscript-left">
         <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>{designation ? designation.label : 'FOLIO ✧'}</span></header>

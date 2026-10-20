@@ -94,7 +94,8 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
  (() => {
    const volume = document.getElementById('codex-volume');
    const cover = document.getElementById('codex-opening-cover');
-   if (volume && cover && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+   const chapterLink = new URLSearchParams(window.location.search).get('chapter');
+   if (volume && cover && !window.location.hash && !chapterLink && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
      volume.classList.add('is-opening');
      cover.addEventListener('animationend', () => {cover.hidden = true;volume.classList.remove('is-opening');}, {once:true});
    }
@@ -105,7 +106,8 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
    const count=document.getElementById('codex-count');
    const title=document.getElementById('codex-selected-chapter');
    const empty=document.getElementById('codex-empty');
-   let active='character';
+   let active=['character','location','phenomenon','narration','all'].includes(chapterLink) ? chapterLink : 'character';
+   for(const tab of nav)tab.setAttribute('aria-pressed',String(tab.dataset.filter===active));
    const filter=()=>{
      const q=(query.value||'').toLocaleLowerCase().trim();
      let found=0;
@@ -125,7 +127,7 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
      active=button.dataset.filter;
      for(const tab of nav)tab.setAttribute('aria-pressed', String(tab===button));
      filter();
-     if(window.matchMedia('(max-width: 800px)').matches)document.getElementById('codex-index').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+     if(window.matchMedia('(max-width: 800px)').matches)document.getElementById('codex-index').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
    });
    query.addEventListener('input',()=>{
      if(query.value.trim() && active!=='all'){
