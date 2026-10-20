@@ -408,3 +408,31 @@ h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;
 .codex-open-link:hover {background:#6944211c;}
 .codex-open-link:focus-visible {outline:3px solid #754920;outline-offset:3px;}
 #codex-index {scroll-margin-top:35px;}
+
+/* Court Registry: story-facing clearance dressing, not real access control. */
+.court-access-status {display:flex;align-items:center;gap:25px;margin:0 0 65px;padding:26px 30px;border:1px solid #b99762a6;background:linear-gradient(125deg,#1a1c20,#0f1219);box-shadow:inset 0 0 0 5px #d4b37b10;}
+.court-access-seal {display:flex;align-items:center;justify-content:center;flex:none;width:76px;height:76px;border:1px solid #caa46f;outline:1px solid #caa46f35;outline-offset:6px;border-radius:50%;color:#d8b67c;font-size:42px;}
+.court-access-description {flex:1;min-width:0;}
+.court-access-description .overline,.court-clearance-panel .overline {margin-bottom:8px;}
+.court-access-description h2 {font-size:40px;margin:0 0 4px;line-height:.95;color:#edd4ab;}
+.court-access-description p:last-child {margin:10px 0 0;font-size:12px;line-height:1.8;color:#c6b6a0;max-width:650px;}
+.court-access-tier {display:block;flex:none;border:1px solid #b69560;padding:14px 16px;min-width:155px;text-align:center;color:#deb87c;font-size:10px;line-height:1.85;letter-spacing:.13em;}
+.court-clearance-panel {display:flex;align-items:center;gap:22px;margin:42px auto 0;padding:25px 30px;border:1px solid #ac874f8a;background:radial-gradient(ellipse at 10% 40%,#886a3522,transparent 45%),#13171b;color:#d6c6a9;}
+.court-clearance-glyph {display:block;flex:none;font:55px 'Cormorant Garamond',Georgia,serif;line-height:1;color:#bd9b64;}
+.court-clearance-panel>div {flex:1;min-width:0;}
+.court-clearance-panel h2 {font-size:35px;line-height:1;margin:7px 0;color:#e9d2ad;}
+.court-clearance-panel p:last-child {font:12px/1.8 Inter,system-ui,sans-serif;color:#bcad97;margin-bottom:0;max-width:700px;}
+.court-clearance-stamp {flex:none;border:1px solid #8a6c48;padding:12px;text-align:center;color:#cca16a;font-size:9px;letter-spacing:.13em;max-width:150px;}
+.codex-record .overline {letter-spacing:.14em;}
+.manuscript-page-header span:last-child {max-width:57%;text-align:right;}
+@media(max-width:700px) {
+ .court-access-status {flex-wrap:wrap;gap:18px;padding:24px 21px;margin-bottom:48px;}
+ .court-access-seal {width:54px;height:54px;font-size:31px;}
+ .court-access-description {flex-basis:calc(100% - 75px);}
+ .court-access-description h2 {font-size:35px;}
+ .court-access-tier {width:100%;min-width:0;}
+ .court-clearance-panel {flex-direction:column;text-align:center;gap:12px;padding:25px 20px;}
+ .court-clearance-panel h2 {font-size:33px;}
+ .court-clearance-stamp {max-width:none;width:100%;}
+ .manuscript-page-header {font-size:8px;letter-spacing:.08em;}
+}

@@ -53,3 +53,11 @@ The creator requested an original **new** hidden mystery, plus a parchment-and-b
 The hidden three-mark route is seeded into the published Seeker character page, Hall of Architects location page and Arc I Archive I reading page; collecting all three browser-local marks makes an unlisted route readable. Mark progress is stored only in this browser, without account services or tracking. Browser source can be inspected; this is a discoverable story puzzle, **not** a security boundary.
 
 **The Unindexed Record — The Shoreless Light** is new, original website-exclusive story material written for this experiment. Its supposed testimony is **unverified within the fiction** and is not presented as a discovered fact about any established Court era, institution, place, character or system. It is not automatically Locked Canon. The creator may approve, revise or decline its future narrative consequences. No unreleased Arc, Chronicle, lyrics or novel text is reproduced in it.
+
+## Court registry labels and transcript identifiers (20 October 2026)
+
+The public site presents the reader with a fictional **Initiate / Clearance I** designation and sealed higher-clearance annex. This is a purely in-universe interface: not an actual membership system, not a new established Court hierarchy and not proof that unpublished files exist. The actual release boundaries above remain in force.
+
+Display precise spoken identifiers when the narrator announces an entry number: Arc II uses 11903–11908; Arc III uses 8174, 11902, 431, 9201, 0900 and 0001 (preserve the leading zeros); Arc IV uses 1–5. Arc Ø narrations do not speak numbers, but six Locked Canon source headings explicitly list 001, 014, 274,119, 618,442, 1,482,903, 1,482,904; the seventh is an unnumbered recovered Archive. Arc I and the released Meridian Chronicle do not announce record IDs, so use their canonical ordinal sequence in Roman numerals. See `src/data/archive-identifiers.ts` for identifiers and their evidence classification.
+
+The external-facing remarks about publication status, working canon and production restrictions were replaced with fictional registry language. Keep those safeguards in private development and policy documents, not rendered as part of the fictional records.
