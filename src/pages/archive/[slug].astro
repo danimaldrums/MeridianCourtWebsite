@@ -27,8 +27,10 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
         <p class="folio-eyebrow">{kindLabels[record.kind]} · REGISTRY ACCESS I</p>
         <h1>{record.title}</h1>
         <div class="manuscript-art">
-          {album && <img src={base + album.cover} alt={'Approved album artwork for '+album.title+'; thematic illustration, not a canonical portrait or depiction of this record'} width="360" height="360" loading="lazy"/>}
-          <span class="manuscript-plate-caption">ILLUSTRATION: {album ? album.title : 'COURT ARCHIVE'}</span>
+          {record.kind === 'narration'
+            ? (album && <img src={base + album.cover} alt={'Official cover artwork for '+album.title} width="360" height="360" loading="lazy"/>)
+            : <img src={base + 'images/codex/' + record.slug + '.svg'} alt={'An illustrative '+(record.kind==='character'?'character study':'scene')+' for '+record.title+'; details are not an authenticated historical likeness'} width="360" height="360" loading="lazy"/>}
+          <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
         </div>
         <p class="manuscript-opening">{record.kind === 'narration' ? ('Recovered testimony · '+(designation?.label || 'ARCHIVE')+' · '+record.albumTitle+'.') : record.summary}</p>
         <div class="manuscript-provenance"><span>RECORDED IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
@@ -92,7 +94,10 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     </aside>
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
-      <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item"><span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span></a>)}</div>
+      <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item">
+        {item.kind !== 'narration' && <img src={base+'images/codex/'+item.slug+'.svg'} alt="" width="110" height="110" loading="lazy"/>}
+        <span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span>
+      </a>)}</div>
     </section>}
     <p class="codex-footnote">MERIDIAN CODEX · GENERAL REGISTRY · END OF ACCESSIBLE ENTRY</p>
     <a class="button button-outline" href={base+'archive/'}>Return to the Codex ↗</a>
