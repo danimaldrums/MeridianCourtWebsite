@@ -36,3 +36,11 @@ The abstract CSS graphics and temporary compass-like site icon are **not** the c
 ## Next passes
 
 Approved logo and covers, verified music links, individual album pages, responsive/accessibility review and public lore expansion.
+
+## Public Codex / Archive readers (2026-10-20)
+
+The public Archive is now a curated search index of released character, location and phenomenon summaries plus 35 original spoken Archive narrations from Arc Ø–IV and the released Meridian Chronicle. Narrative transcripts were extracted only from each Locked Canon file's **Official Narration**, **Final Script**, **Lyrics**, **Narration** or **Archive Script** section, not from Suno prompts, creative notes or unreleased documents.
+
+Readers must actively open spoiler-aware record panels. The reference entries are editorial summaries of released source, not independent canon. They must be corrected against the canonical source if it changes. All 35 narrations should receive a human cross-check against released audio before claiming word-for-word audio equivalence; notably the Locked Canon file for **Arc I — The First Page** contains only a very short script.
+
+**Secret material:** no new fictional revelation, future album hint or hidden narrative payload should be added to the public GitHub repo until the creator separately approves both its actual wording and canon status. A concealed client-side message is discoverable in publicly hosted HTML/JavaScript and cannot be treated as confidential.

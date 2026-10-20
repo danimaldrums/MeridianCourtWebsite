@@ -1,0 +1,53 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { codexRecords, codexBySlug, type CodexRecord } from '../../../data/codex';
+import { arcs, chronicles } from '../../../data/albums';
+export function getStaticPaths() {
+  return codexRecords.map(record => ({ params: { slug: record.slug }, props: { record } }));
+}
+const { record } = Astro.props as { record: CodexRecord };
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',narration:'ARCHIVE NARRATION'};
+const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
+const related = record.kind === 'narration' ? [] : record.related.map(slug=>codexBySlug.get(slug)).filter((r):r is CodexRecord=>Boolean(r));
+---
+<SiteLayout title={record.title} current="archive">
+  <section class="content-shell codex-detail">
+    <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/'}>← Back to the Archive</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
+    <div class="codex-detail-head">
+      <div class="codex-detail-intro">
+        <p class="overline">{kindLabels[record.kind]} · PUBLISHED RECORD</p>
+        <h1>{record.title}</h1>
+        <p class="codex-detail-lede">{record.kind === 'narration' ? ('The original narration from '+record.albumTitle+'. Preserved from the released album Archive.') : record.summary}</p>
+        <div class="codex-provenance"><span>APPEARS IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
+      </div>
+      {album && <a class="codex-detail-art" href={base+'music/#'+album.slug} aria-label={'Discover '+album.title}><img src={base+album.cover} alt={'Approved artwork for '+album.title} width="420" height="420" loading="lazy"/></a>}
+    </div>
+    <div class="codex-reading-shell">
+      <div class="codex-reading-heading"><span class="overline">THE PUBLIC RECORD</span><span class="section-caption">{record.kind === 'narration' ? ('ARCHIVE '+String(record.archiveNumber).padStart(2,'0')) : 'RELEASED CANON ONLY'}</span></div>
+      {record.kind === 'narration' ? (
+        <details class="codex-reveal">
+          <summary>Read the original Archive narration <span aria-hidden="true">⌄</span></summary>
+          <p class="codex-spoiler">Story spoilers ahead. The wording below is preserved from the released canonical narration file; performance cues may appear in brackets.</p>
+          <pre class="codex-transcript">{record.body}</pre>
+        </details>
+      ) : (
+        <details class="codex-reveal">
+          <summary>Open the full record <span aria-hidden="true">⌄</span></summary>
+          <p class="codex-spoiler">This entry describes events from a released album and may contain spoilers.</p>
+          <div class="codex-paragraphs">{record.body.map(paragraph => <p>{paragraph}</p>)}</div>
+        </details>
+      )}
+    </div>
+    {related.length > 0 && (
+      <section class="codex-connections" aria-label="Connected records">
+        <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">RELATED PUBLIC RECORDS</span></div>
+        <div class="codex-related-grid">
+          {related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item"><span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span></a>)}
+        </div>
+      </section>
+    )}
+    <p class="codex-footnote">The Meridian Court Archive distinguishes what has been recorded from what remains unresolved. Public reference summaries do not establish new canon.</p>
+    <a class="button button-outline" href={base + 'archive/'}>Return to the Codex <span aria-hidden="true">↗</span></a>
+  </section>
+</SiteLayout>

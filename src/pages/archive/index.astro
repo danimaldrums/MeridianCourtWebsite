@@ -1,49 +1,106 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import { codexRecords } from '../../data/codex';
+import { arcs, chronicles } from '../../data/albums';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const entries = [
-  {
-    type: 'ANCIENT SYSTEM', name: 'The Celestial Engine',
-    summary: 'Created during the Luminar Ascendancy’s struggle against the collapse of reality, the Engine stands at the centre of a responsibility that spans ages.'
-  },
-  {
-    type: 'CHARACTER', name: 'The Seeker',
-    summary: 'An unexplained calling begins a journey towards the Meridian. Discovery becomes responsibility as the Seeker learns that certainty and hope are not the same thing.'
-  },
-  {
-    type: 'CHARACTER', name: 'Meridian',
-    summary: 'Known in an earlier life as Asteris, her story asks how anyone can protect possibility without claiming the right to choose for everyone else.'
-  },
-  {
-    type: 'PHENOMENON', name: 'The Fractures',
-    summary: 'Anomalies that challenge the continuity of memory, history and reality itself. Their origins and final meaning remain uncertain.'
-  }
+const albums = [ ...arcs, ...chronicles ];
+const types = [
+  { kind:'all', label:'All records' },
+  { kind:'character', label:'Characters' },
+  { kind:'location', label:'Locations' },
+  { kind:'narration', label:'Album Archives' },
+  { kind:'phenomenon', label:'Phenomena' }
 ];
+const counts = {
+  character: codexRecords.filter(e=>e.kind==='character').length,
+  location: codexRecords.filter(e=>e.kind==='location').length,
+  narration: codexRecords.filter(e=>e.kind==='narration').length,
+  phenomenon: codexRecords.filter(e=>e.kind==='phenomenon').length
+};
+const typeName = {character:'CHARACTER',location:'LOCATION',narration:'ARCHIVE NARRATION',phenomenon:'PHENOMENON'};
 ---
 <SiteLayout title="The Archive" current="archive">
-  <section class="page-heading content-shell">
-    <p class="overline">RECORDS / FRAGMENTS / QUESTIONS</p>
+  <section class="page-heading content-shell codex-heading">
+    <p class="overline">THE MERIDIAN CODEX / PUBLIC RECORDS</p>
     <h1>The <em>Archive</em></h1>
-    <p>Not every story begins at its beginning. Explore some of the people and mysteries at the heart of Meridian Court.</p>
+    <p>Every life leaves an impression. Every place holds a history. Search the published records, follow the connections, and return to the words preserved between the songs.</p>
+    <div class="codex-tallies" aria-label="Archive index totals">
+      <span><strong>{counts.character}</strong> characters</span>
+      <span><strong>{counts.location}</strong> locations</span>
+      <span><strong>{counts.narration}</strong> narrated Archives</span>
+      <span><strong>{counts.phenomenon}</strong> phenomena</span>
+    </div>
   </section>
-  <section class="archive-content content-shell">
-    <div class="archive-manifesto">
+  <section class="content-shell codex-content">
+    <div class="archive-manifesto codex-manifesto">
       <span class="archive-sigil" aria-hidden="true">✧</span>
       <p>“Protect possibility. Honour choice. Live with consequence.”</p>
-      <span class="section-caption">A guiding principle of the Meridian Chronicle</span>
+      <span class="section-caption">Only publicly released canon is indexed. The unknown remains unknown.</span>
     </div>
-    <div class="archive-grid">
-      {entries.map((entry, index) => (
-        <article class="archive-card">
-          <div class="archive-topline"><span class="overline">{entry.type}</span><span class="archive-index">RECORD {String(index + 1).padStart(3, '0')}</span></div>
-          <h2>{entry.name}</h2>
-          <p>{entry.summary}</p>
-        </article>
+    <div class="codex-toolbar">
+      <label class="codex-field">
+        <span class="overline">SEARCH THE CODEX</span>
+        <input id="codex-search" type="search" placeholder="A person, place, title or idea…" autocomplete="off" aria-label="Search archive records"/>
+      </label>
+      <label class="codex-field codex-album-filter">
+        <span class="overline">ALBUM / CHRONICLE</span>
+        <select id="codex-album" aria-label="Filter Archive by album">
+          <option value="all">All released chapters</option>
+          {albums.map(album => <option value={album.slug}>{album.arc} · {album.title}</option>)}
+        </select>
+      </label>
+    </div>
+    <nav class="codex-filters" aria-label="Filter record type">
+      {types.map((type,index) => <button type="button" class="codex-filter" data-filter={type.kind} aria-pressed={index===0 ? 'true' : 'false'}>{type.label}</button>)}
+    </nav>
+    <div class="codex-result-line" aria-live="polite"><span id="codex-count">{codexRecords.length} records found</span><span class="section-caption">EXPLORE / READ / CONNECT</span></div>
+    <div id="codex-grid" class="codex-grid">
+      {codexRecords.map((entry,index) => (
+        <a class="codex-record" href={base + 'archive/' + entry.slug + '/'}
+          data-type={entry.kind}
+          data-album={entry.albumSlug}
+          data-search={(entry.title+' '+(entry.kind==='narration' ? entry.albumTitle+' '+entry.albumArc : entry.summary+' '+entry.albumTitle)).toLowerCase()}>
+          <div class="codex-record-top"><span class="overline">{typeName[entry.kind]}</span><span class="codex-record-number">{String(index+1).padStart(3,'0')}</span></div>
+          <h2>{entry.title}</h2>
+          <p>{entry.kind==='narration' ? ('Read the original spoken Archive '+String(entry.archiveNumber).padStart(2,'0')+' from '+entry.albumTitle+'.') : entry.summary}</p>
+          <div class="codex-record-bottom"><span>{entry.albumTitle}</span><span aria-hidden="true">↗</span></div>
+        </a>
       ))}
     </div>
-    <div class="archive-bottom">
-      <p>Additional records will become available as the public Archive grows.</p>
-      <a class="text-link" href={base + 'chronology/'}>Explore the chronology <span aria-hidden="true">→</span></a>
-    </div>
+    <p id="codex-empty" class="codex-empty" hidden>No matching public records. Try another search or chapter.</p>
+    <p class="codex-boundary">Archive narrations contain story revelations. Individual records open with a spoiler-aware reading view. This public Codex does not include unreleased albums, production prompts or undecided history.</p>
   </section>
+  <script is:inline>
+    (() => {
+      const search = document.getElementById('codex-search');
+      const album = document.getElementById('codex-album');
+      const filters = [...document.querySelectorAll('.codex-filter')];
+      const cards = [...document.querySelectorAll('.codex-record')];
+      const count = document.getElementById('codex-count');
+      const empty = document.getElementById('codex-empty');
+      let kind = 'all';
+      const refresh = () => {
+        const q = (search.value || '').toLowerCase().trim();
+        let visible = 0;
+        for (const card of cards) {
+          const show = (kind === 'all' || card.dataset.type === kind)
+            && (album.value === 'all' || card.dataset.album === album.value)
+            && (!q || card.dataset.search.includes(q));
+          card.hidden = !show;
+          if(show) visible++;
+        }
+        count.textContent = visible + (visible === 1 ? ' record found' : ' records found');
+        empty.hidden = visible !== 0;
+      };
+      search.addEventListener('input', refresh);
+      album.addEventListener('change', refresh);
+      for (const button of filters) {
+        button.addEventListener('click', () => {
+          kind = button.dataset.filter;
+          for (const other of filters) other.setAttribute('aria-pressed', String(other === button));
+          refresh();
+        });
+      }
+    })();
+  </script>
 </SiteLayout>
