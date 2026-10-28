@@ -34,6 +34,10 @@ const related: CodexRecord[] = record.kind === 'narration'
       return [...unique.values()];
     })()
   : record.related.map(slug => codexBySlug.get(slug)).filter((item): item is CodexRecord => Boolean(item));
+const albumNarrationSequence = record.kind === 'narration' ? codexRecords.filter(item => item.kind === 'narration' && item.albumSlug === record.albumSlug) : [];
+const sequenceIndex = albumNarrationSequence.findIndex(item => item.slug === record.slug);
+const previousNarration = sequenceIndex > 0 ? albumNarrationSequence[sequenceIndex - 1] : undefined;
+const nextNarration = sequenceIndex >= 0 ? albumNarrationSequence[sequenceIndex + 1] : undefined;
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
 ---
 <SiteLayout title={record.title} current="archive">
@@ -111,6 +115,14 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
       </div>
       <span class="court-clearance-stamp">CLEARANCE II REQUIRED</span>
     </aside>
+    {record.kind === 'narration' && <nav class="codex-reading-route" aria-label="Archive reading sequence">
+      <p class="overline">THE THREAD OF TESTIMONY</p>
+      <p>Archive {sequenceIndex + 1} of {albumNarrationSequence.length} · {record.albumTitle}</p>
+      <div class="codex-reading-route-links">
+        {previousNarration && <a href={base+'archive/'+previousNarration.slug+'/'}>← Previous: {previousNarration.title}</a>}
+        {nextNarration && <a href={base+'archive/'+nextNarration.slug+'/'}>Next: {nextNarration.title} →</a>}
+      </div>
+    </nav>}
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
       <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item">
@@ -175,3 +187,11 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 .manuscript-art img.codex-approved-portrait{aspect-ratio:auto;object-fit:contain;height:auto;max-height:600px}
 </style>
 </SiteLayout>
+
+<style is:global>
+.codex-reading-route{margin:2rem 0;padding:1.3rem;border:1px solid rgba(173,139,82,.45);background:rgba(120,91,47,.08)}
+.codex-reading-route p{margin:.5rem 0 1rem}
+.codex-reading-route-links{display:flex;flex-wrap:wrap;gap:.75rem}
+.codex-reading-route-links a{display:block;padding:.8rem 1rem;border:1px solid rgba(173,139,82,.4);color:inherit;text-decoration:none}
+.codex-reading-route-links a:hover,.codex-reading-route-links a:focus-visible{border-color:currentColor;text-decoration:underline}
+</style>
