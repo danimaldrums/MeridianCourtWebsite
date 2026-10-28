@@ -1,0 +1,71 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { codexRecords } from '../../data/codex';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const entries = codexRecords.map(({slug,title,kind,albumTitle}) => ({slug,title,kind,albumTitle}));
+---
+<SiteLayout title="My Reading Ledger" current="archive" description="Your private, locally saved Meridian Codex bookmarks.">
+<main class="content-shell ledger-page">
+  <nav><a href={base+'archive/'}>← The Meridian Codex</a></nav>
+  <p class="overline">THE READER'S PRIVATE REGISTER</p>
+  <h1>My Reading <em>Ledger</em></h1>
+  <p>Bookmarked records are saved only in this browser on this device. They are not linked to an account or synchronised between devices.</p>
+  <p id="ledger-empty">Checking your saved records…</p>
+  <ul id="ledger-list" hidden></ul>
+  <button id="ledger-clear" type="button" hidden>Clear saved records</button>
+  <p><a href={base+'archive/threads/'}>Explore the Threads of History →</a></p>
+</main>
+<script define:vars={{entries,base}}>
+  const key = 'meridian-court-reading-ledger-v1';
+  const list = document.getElementById('ledger-list');
+  const empty = document.getElementById('ledger-empty');
+  const clear = document.getElementById('ledger-clear');
+  const read = () => {
+    try { const parsed = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(parsed) ? parsed.filter(x => typeof x === 'string') : []; }
+    catch { return []; }
+  };
+  function render() {
+    const saved = read();
+    const matches = entries.filter(entry => saved.includes(entry.slug));
+    list.replaceChildren();
+    matches.forEach(entry => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = base + 'archive/' + encodeURIComponent(entry.slug) + '/';
+      link.textContent = entry.title;
+      const context = document.createElement('span');
+      context.textContent = ' · ' + entry.albumTitle;
+      item.append(link,context);
+      list.append(item);
+    });
+    if (saved.includes('threads-of-history')) {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = base + 'archive/threads/';
+      link.textContent = 'Threads of History';
+      item.append(link);
+      list.append(item);
+    }
+    const count = matches.length + (saved.includes('threads-of-history') ? 1 : 0);
+    list.hidden = count === 0;
+    clear.hidden = count === 0;
+    empty.textContent = count ? count + ' saved page' + (count === 1 ? '' : 's') + ' on this device.' : 'No bookmarks yet. Open any Codex record and select “Save this record”.';
+  }
+  clear.addEventListener('click', () => {
+    if (!window.confirm('Remove all saved Codex bookmarks from this device?')) return;
+    try { localStorage.removeItem(key); render(); }
+    catch { empty.textContent = 'Browser storage is unavailable.'; }
+  });
+  render();
+</script>
+<style>
+.ledger-page{padding-top:2rem;padding-bottom:5rem;max-width:900px}
+.ledger-page h1{font:500 clamp(3rem,7vw,5rem) 'Cormorant Garamond',Georgia,serif}
+.ledger-page a{color:inherit}
+.ledger-page>p{line-height:1.7}
+.ledger-page ul{padding:1rem 1.5rem;border:1px solid rgba(173,139,82,.5);line-height:2.2}
+.ledger-page li{padding:.4rem 0}
+.ledger-page li span{opacity:.65;font-size:.9rem}
+.ledger-page button{padding:.7rem 1rem;background:transparent;border:1px solid #ad8b52;color:inherit;cursor:pointer}
+</style>
+</SiteLayout>
