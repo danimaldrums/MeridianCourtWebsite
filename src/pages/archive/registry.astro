@@ -1,0 +1,103 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { codexRecords } from '../../data/codex';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const publishedSlugs = codexRecords.map(x => x.slug);
+const levels = [
+  {name:'Observer',min:0},
+  {name:'Archive Researcher',min:3},
+  {name:'Senior Researcher',min:8},
+  {name:'Keeper of Records',min:16},
+  {name:'Inner Registry',min:30}
+];
+---
+<SiteLayout title="Court Registry" current="archive" description="Your local Archivist profile, discoveries and reading clearance.">
+<main class="content-shell registry-shell">
+ <nav><a href={base+'archive/'}>← Return to the Meridian Codex</a></nav>
+ <header class="registry-heading"><p class="overline">MERIDIAN COURT · PRIVATE READER REGISTER</p><h1>The Court <em>Registry</em></h1><p>Create a local Archivist identity and follow your exploration of the published Codex. This is a reader experience, not an online account or access to restricted canon.</p></header>
+ <section class="registry-panel">
+  <p class="overline">REGISTERED OBSERVER</p>
+  <label for="registry-name">Archivist designation</label>
+  <div class="registry-name-row"><input id="registry-name" maxlength="40" autocomplete="off" placeholder="Choose an Archivist name"/><button id="registry-save-name" type="button">Save designation</button></div>
+  <p id="registry-status" role="status" aria-live="polite"></p>
+  <div class="registry-clearance"><div class="registry-seal" aria-hidden="true">◇</div><div><p class="overline">CURRENT CLEARANCE</p><h2 id="registry-level">Observer</h2><p id="registry-next">Begin exploring the records.</p></div></div>
+  <div class="registry-meter" role="progressbar" aria-label="Progress to next clearance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="registry-meter"><span id="registry-fill"></span></div>
+  <div class="registry-stats"><div><strong id="registry-read">0</strong><span>Records visited</span></div><div><strong id="registry-saved">0</strong><span>Saved pages</span></div><div><strong id="registry-marks">0 / 3</strong><span>Hidden marks</span></div></div>
+ </section>
+ <section class="registry-panel"><h2>Clearance designations</h2><ol class="registry-levels">{levels.map((level,i)=><li><span>LEVEL {['I','II','III','IV','V'][i]}</span><strong>{level.name}</strong><small>{i===0?'Initial designation':level.min+' unique published records visited'+(i>0?' · discovery requirement applies':'')}</small></li>)}</ol><p class="registry-footnote">Advancement is earned through reading and exploration. Levels II–V also require finding respectively one, two, three and three hidden marks. These designations are local achievements, not security permissions.</p></section>
+ <section class="registry-panel"><h2>Preserve your progress</h2><p>Export a backup to move progress to another browser or keep it safe. Importing replaces the current local Registry progress after confirmation. Backup files contain your chosen designation, reading history, bookmarks and discovery marks; keep them private.</p><div class="registry-actions"><button id="registry-export" type="button">Export Registry backup</button><label class="registry-import">Import Registry backup <input id="registry-import-file" type="file" accept=".json,application/json"/></label></div><p id="registry-import-status" role="status" aria-live="polite"></p></section>
+ <p><a href={base+'archive/ledger/'}>Open your reading ledger →</a> · <a href={base+'archive/threads/'}>Follow the Threads of History →</a></p>
+</main>
+<script define:vars={{publishedSlugs,levels}}>
+ const profileKey='meridian-court-registry-v1', readKey='meridian-court-visited-v1', ledgerKey='meridian-court-reading-ledger-v1', marksKey='meridian-court-folios-v1';
+ const allowed = new Set(publishedSlugs);
+ const safeList=(value,max=200)=>Array.isArray(value)?[...new Set(value.filter(x=>typeof x==='string' && x.length<120))].slice(0,max):[];
+ const getJSON=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??fallback}catch{return fallback}};
+ const getMarks=()=>{const marks=getJSON(marksKey,[]);return Array.isArray(marks)?[...new Set(marks.filter(x=>Number.isInteger(x)&&x>=1&&x<=3))]:[]};
+ const nameInput=document.getElementById('registry-name'), status=document.getElementById('registry-status');
+ const loadProfile=()=>getJSON(profileKey,{name:''});
+ const getState=()=>({
+   name:typeof loadProfile()?.name==='string'?loadProfile().name.slice(0,40):'',
+   visited:safeList(getJSON(readKey,[])).filter(x=>allowed.has(x)),
+   saved:safeList(getJSON(ledgerKey,[])).filter(x=>allowed.has(x)||x==='threads-of-history'),
+   marks:getMarks()
+ });
+ const rank=(count,marks)=>{let i=0;for(let n=1;n<levels.length;n++){if(count>=levels[n].min&&marks>=Math.min(n,3))i=n;}return i};
+ const render=()=>{
+   const s=getState(),i=rank(s.visited.length,s.marks.length),level=levels[i],next=levels[i+1];
+   nameInput.value=s.name;
+   document.getElementById('registry-level').textContent=level.name;
+   document.getElementById('registry-read').textContent=String(s.visited.length);
+   document.getElementById('registry-saved').textContent=String(s.saved.length);
+   document.getElementById('registry-marks').textContent=s.marks.length+' / 3';
+   const percent=next?Math.min(100,Math.round(s.visited.length/next.min*100)):100;
+   document.getElementById('registry-fill').style.width=percent+'%';
+   document.getElementById('registry-meter').setAttribute('aria-valuenow',String(percent));
+   document.getElementById('registry-next').textContent=next?'Next: '+next.name+' · '+next.min+' records and '+Math.min(i+1,3)+' marks':'Highest current designation reached';
+ };
+ document.getElementById('registry-save-name').addEventListener('click',()=>{
+   const name=nameInput.value.trim().slice(0,40);
+   try{localStorage.setItem(profileKey,JSON.stringify({name}));status.textContent=name?'Designation saved on this device.':'Designation cleared.';render()}
+   catch{status.textContent='Browser storage is unavailable.'}
+ });
+ document.getElementById('registry-export').addEventListener('click',()=>{
+   const data={format:'meridian-court-registry',version:1,exportedAt:new Date().toISOString(),...getState()};
+   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+   const url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download='meridian-court-registry-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ });
+ document.getElementById('registry-import-file').addEventListener('change',async e=>{
+   const target=e.currentTarget, file=target.files?.[0], feedback=document.getElementById('registry-import-status');
+   if(!file)return;
+   try{
+     if(file.size>100000)throw Error('Backup file is too large.');
+     const data=JSON.parse(await file.text());
+     if(data?.format!=='meridian-court-registry'||data.version!==1||typeof data.name!=='string'||!Array.isArray(data.visited)||!Array.isArray(data.saved)||!Array.isArray(data.marks))throw Error('This is not a supported Registry backup.');
+     if(!window.confirm('Replace this device’s current Registry progress with the imported backup?'))return;
+     const visited=safeList(data.visited).filter(x=>allowed.has(x));
+     const saved=safeList(data.saved).filter(x=>allowed.has(x)||x==='threads-of-history');
+     const marks=[...new Set(data.marks.filter(x=>Number.isInteger(x)&&x>=1&&x<=3))];
+     localStorage.setItem(profileKey,JSON.stringify({name:data.name.trim().slice(0,40)}));
+     localStorage.setItem(readKey,JSON.stringify(visited));
+     localStorage.setItem(ledgerKey,JSON.stringify(saved));
+     localStorage.setItem(marksKey,JSON.stringify(marks));
+     feedback.textContent='Registry backup imported successfully.';render();
+   }catch(err){feedback.textContent=err instanceof Error?err.message:'Unable to import backup.'}
+   finally{target.value=''}
+ });
+ render();
+</script>
+<style>
+.registry-shell{padding-top:2rem;padding-bottom:5rem;max-width:1000px}
+.registry-shell a{color:inherit}.registry-heading{margin:3rem 0;max-width:760px}.registry-heading h1{font:500 clamp(3rem,7vw,5rem) 'Cormorant Garamond',Georgia,serif}.registry-heading p:last-child,.registry-panel p{line-height:1.65}
+.registry-panel{border:1px solid rgba(173,139,82,.55);padding:clamp(1rem,3vw,2rem);margin:1.5rem 0;background:rgba(173,139,82,.06)}
+.registry-name-row,.registry-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin:.7rem 0}
+.registry-shell input,.registry-shell button,.registry-import{padding:.7rem 1rem;border:1px solid #ad8b52;background:transparent;color:inherit;font:inherit}
+.registry-shell button,.registry-import{cursor:pointer}.registry-name-row input{flex:1;min-width:190px}
+.registry-clearance{display:flex;gap:1.3rem;align-items:center;margin:2rem 0}.registry-seal{font-size:4rem;color:#ad8b52}.registry-clearance h2{font:500 2.5rem 'Cormorant Garamond',Georgia,serif;margin:.2rem 0}
+.registry-meter{height:10px;border:1px solid #ad8b52;overflow:hidden}.registry-meter span{display:block;height:100%;width:0;background:#ad8b52}
+.registry-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}.registry-stats div{padding:1rem;border:1px solid rgba(173,139,82,.35);display:flex;flex-direction:column;gap:.4rem}.registry-stats strong{font-size:1.5rem}.registry-stats span{font-size:.8rem}
+.registry-levels{list-style:none;padding:0}.registry-levels li{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;padding:.8rem 0;border-bottom:1px solid rgba(173,139,82,.3)}.registry-levels li span{font-size:.75rem;letter-spacing:.08em}.registry-levels li small{opacity:.75}.registry-import input{display:block;max-width:230px;font-size:.8rem}.registry-footnote{font-size:.85rem;opacity:.8}
+@media(max-width:560px){.registry-stats{grid-template-columns:1fr}.registry-clearance{align-items:flex-start}}
+</style>
+</SiteLayout>
