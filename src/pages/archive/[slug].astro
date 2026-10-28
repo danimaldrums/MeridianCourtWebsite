@@ -23,8 +23,15 @@ const related: CodexRecord[] = record.kind === 'narration'
       const albumNarrations = codexRecords.filter(item => item.kind === 'narration' && item.albumSlug === record.albumSlug);
       const position = albumNarrations.findIndex(item => item.slug === record.slug);
       const neighbours = [albumNarrations[position - 1], albumNarrations[position + 1]].filter((item): item is CodexRecord => Boolean(item));
-      const references = codexRecords.filter(item => item.kind !== 'narration' && item.albumSlug === record.albumSlug).slice(0, 2);
-      return [...neighbours, ...references];
+      const references = codexRecords.filter(item => item.kind !== 'narration' && item.related.includes(record.slug));
+      // Prioritise explicitly documented connections; fall back to the album's own references.
+      const fallback = codexRecords.filter(item => item.kind !== 'narration' && item.albumSlug === record.albumSlug);
+      const unique = new Map<string, CodexRecord>();
+      for (const item of [...neighbours, ...references, ...fallback]) {
+        if (item.slug !== record.slug && !unique.has(item.slug)) unique.set(item.slug, item);
+        if (unique.size >= 4) break;
+      }
+      return [...unique.values()];
     })()
   : record.related.map(slug => codexBySlug.get(slug)).filter((item): item is CodexRecord => Boolean(item));
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
