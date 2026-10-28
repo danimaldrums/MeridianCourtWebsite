@@ -66,7 +66,7 @@ export const referenceRecords: CodexReference[] = [
     "related": [
       "asteris-home-world",
       "the-boundary",
-      "celestial-engine",
+      "the-celestial-engine",
       "all-that-might-have-been-archive-01"
     ]
   },
