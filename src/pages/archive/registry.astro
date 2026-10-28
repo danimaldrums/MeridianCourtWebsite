@@ -25,6 +25,13 @@ const levels = [
   <div class="registry-stats"><div><strong id="registry-read">0</strong><span>Records visited</span></div><div><strong id="registry-saved">0</strong><span>Saved pages</span></div><div><strong id="registry-marks">0 / 3</strong><span>Hidden marks</span></div></div>
  </section>
  <section class="registry-panel"><h2>Clearance designations</h2><ol class="registry-levels">{levels.map((level,i)=><li><span>LEVEL {['I','II','III','IV','V'][i]}</span><strong>{level.name}</strong><small>{i===0?'Initial designation':level.min+' unique published records visited'+(i>0?' · discovery requirement applies':'')}</small></li>)}</ol><p class="registry-footnote">Advancement is earned through reading and exploration. Levels II–V also require finding respectively one, two, three and three hidden marks. These designations are local achievements, not security permissions.</p></section>
+ <section class="registry-panel" aria-labelledby="registry-achievements-title">
+  <p class="overline">RECOGNITIONS OF THE COURT</p>
+  <h2 id="registry-achievements-title">Archivist insignia</h2>
+  <p>Insignia reflect your exploration of the published Codex. Unclaimed recognitions remain visible so you can see what to discover next.</p>
+  <ul id="registry-achievements" class="registry-achievements" aria-live="polite"></ul>
+  <p id="registry-promotion" class="registry-promotion" role="status" aria-live="polite"></p>
+ </section>
  <section class="registry-panel"><h2>Preserve your progress</h2><p>Export a backup to move progress to another browser or keep it safe. Importing replaces the current local Registry progress after confirmation. Backup files contain your chosen designation, reading history, bookmarks and discovery marks; keep them private.</p><div class="registry-actions"><button id="registry-export" type="button">Export Registry backup</button><label class="registry-import">Import Registry backup <input id="registry-import-file" type="file" accept=".json,application/json"/></label></div><p id="registry-import-status" role="status" aria-live="polite"></p></section>
  <p><a href={base+'archive/ledger/'}>Open your reading ledger →</a> · <a href={base+'archive/threads/'}>Follow the Threads of History →</a></p>
 </main>
@@ -43,8 +50,31 @@ const levels = [
    marks:getMarks()
  });
  const rank=(count,marks)=>{let i=0;for(let n=1;n<levels.length;n++){if(count>=levels[n].min&&marks>=Math.min(n,3))i=n;}return i};
+ const achievements=[
+   {id:'first-leaf',name:'First Leaf',hint:'Visit your first Codex record.',earned:s=>s.visited.length>=1},
+   {id:'record-keeper',name:'Record Keeper',hint:'Save five pages in your reading ledger.',earned:s=>s.saved.length>=5},
+   {id:'first-mark',name:'A Mark in the Margin',hint:'Discover one hidden marginal mark.',earned:s=>s.marks.length>=1},
+   {id:'unindexed',name:'The Unindexed Trail',hint:'Find all three hidden marginal marks.',earned:s=>s.marks.length===3},
+   {id:'deep-reader',name:'Deep Reader',hint:'Visit twenty distinct published Codex records.',earned:s=>s.visited.length>=20}
+ ];
+ const showAchievements=s=>{
+   const list=document.getElementById('registry-achievements');
+   list.replaceChildren();
+   achievements.forEach(a=>{
+     const earned=a.earned(s),li=document.createElement('li');
+     const symbol=document.createElement('span');symbol.className='registry-insignia';symbol.textContent=earned?'✧':'◇';symbol.setAttribute('aria-hidden','true');
+     const details=document.createElement('div'),title=document.createElement('strong'),hint=document.createElement('small');
+     title.textContent=a.name+(earned?' · EARNED':' · UNCLAIMED');hint.textContent=a.hint;
+     details.append(title,hint);li.append(symbol,details);li.className=earned?'is-earned':'';list.append(li);
+   });
+ };
  const render=()=>{
    const s=getState(),i=rank(s.visited.length,s.marks.length),level=levels[i],next=levels[i+1];
+   showAchievements(s);
+   const lastKnown=getJSON('meridian-court-last-clearance-v1',null);
+   const promotion=document.getElementById('registry-promotion');
+   if(typeof lastKnown==='number'&&i>lastKnown)promotion.textContent='✧ Clearance advanced: '+level.name+'. Your exploration has been recognised by the Registry.';
+   try{localStorage.setItem('meridian-court-last-clearance-v1',JSON.stringify(i))}catch{}
    nameInput.value=s.name;
    document.getElementById('registry-level').textContent=level.name;
    document.getElementById('registry-read').textContent=String(s.visited.length);
@@ -99,5 +129,12 @@ const levels = [
 .registry-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}.registry-stats div{padding:1rem;border:1px solid rgba(173,139,82,.35);display:flex;flex-direction:column;gap:.4rem}.registry-stats strong{font-size:1.5rem}.registry-stats span{font-size:.8rem}
 .registry-levels{list-style:none;padding:0}.registry-levels li{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;padding:.8rem 0;border-bottom:1px solid rgba(173,139,82,.3)}.registry-levels li span{font-size:.75rem;letter-spacing:.08em}.registry-levels li small{opacity:.75}.registry-import input{display:block;max-width:230px;font-size:.8rem}.registry-footnote{font-size:.85rem;opacity:.8}
 @media(max-width:560px){.registry-stats{grid-template-columns:1fr}.registry-clearance{align-items:flex-start}}
+.registry-achievements{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:.8rem;list-style:none;padding:0}
+.registry-achievements li{display:flex;align-items:center;gap:.9rem;border:1px solid rgba(173,139,82,.3);padding:1rem;opacity:.65}
+.registry-achievements li.is-earned{opacity:1;border-color:#ad8b52;background:rgba(173,139,82,.09)}
+.registry-insignia{font-size:2rem;color:#ad8b52}
+.registry-achievements li div{display:flex;flex-direction:column;gap:.3rem}
+.registry-achievements small{line-height:1.5}
+.registry-promotion:not(:empty){padding:1rem;border-left:3px solid #ad8b52}
 </style>
 </SiteLayout>
