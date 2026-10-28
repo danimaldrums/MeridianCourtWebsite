@@ -218,6 +218,14 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
       });
       render();
     }
+    // Visiting a published record counts once towards local reader clearance.
+    try {
+      const visitedKey = 'meridian-court-visited-v1';
+      const previous = JSON.parse(localStorage.getItem(visitedKey) || '[]');
+      const visited = Array.isArray(previous) ? previous.filter((x): x is string => typeof x === 'string') : [];
+      const currentSlug = document.getElementById('codex-ledger-toggle')?.dataset.recordSlug;
+      if (currentSlug && !visited.includes(currentSlug)) localStorage.setItem(visitedKey,JSON.stringify([...visited,currentSlug]));
+    } catch { /* Private browsing or disabled storage must not block reading. */ }
   </script>
 </SiteLayout>
 
