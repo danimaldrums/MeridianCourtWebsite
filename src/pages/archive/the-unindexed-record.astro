@@ -28,9 +28,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
           <span class="unindexed-page-mark" aria-hidden="true">◌</span>
           <p class="folio-eyebrow">RECORD CLASS: UNVERIFIED / NO ASSIGNED ERA</p>
           <h2>The Shoreless <em>Light</em></h2>
-          <div class="unindexed-illustration" aria-label="Abstract drawing of a single light above an empty horizon" role="img">
-            <span class="unindexed-halo"></span><span class="unindexed-light"></span><span class="unindexed-line"></span>
-            <span class="unindexed-door"></span>
+          <div class="unindexed-sketch">
+            <img src={base + "images/codex/the-unindexed-record.webp"} alt="Ancient hand-drawn field sketch on weathered parchment, with a vast dark celestial formation, observatory ruins, and cryptic astronomical notes." width="1200" height="800" loading="lazy" decoding="async" />
           </div>
           <p class="unindexed-prelude">The leaf was found folded into the binding of an otherwise unmarked volume.</p>
           <p class="unindexed-prelude">No author, place, date or recognised provenance appears upon it. The following words are preserved as an <em>unverified testimony</em>, not an established account of Court history.</p>
@@ -91,3 +90,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     })();
   </script>
 </SiteLayout>
+
+<style is:global>
+.unindexed-sketch { margin: 20px auto 25px; width: 100%; max-width: 560px; }
+.unindexed-sketch img { display: block; width: 100%; height: auto; border: 1px solid #8b6a3f; box-shadow: 0 4px 18px #291b1040; }
+</style>
