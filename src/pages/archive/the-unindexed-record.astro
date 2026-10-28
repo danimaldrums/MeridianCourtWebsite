@@ -67,18 +67,26 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       const sealed = document.getElementById('sealed-record');
       const revealed = document.getElementById('revealed-record');
       const counter = document.getElementById('unindexed-counter');
-      try {
-        const entries = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
-        const found = Array.isArray(entries) ? [1,2,3].filter(n => entries.includes(n)).length : 0;
-        const assembled = new URLSearchParams(window.location.search).get('assembled') === 'a-page-without-a-number';
-        if (found === 3 || assembled) {
-          sealed.hidden = true;
-          revealed.hidden = false;
-        } else {
-          counter.textContent = found + ' of 3 marginal marks recovered. The remainder is hidden among the Court's general registers.';
+      // The assembled link is the handoff from the completed three-mark puzzle.
+      // Check it before touching storage: privacy settings can block localStorage.
+      const assembled = new URLSearchParams(window.location.search).get('assembled') === 'a-page-without-a-number';
+      let found = 0;
+      let storageUnavailable = false;
+      if (!assembled) {
+        try {
+          const entries = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
+          found = Array.isArray(entries) ? [1, 2, 3].filter(n => entries.includes(n)).length : 0;
+        } catch (_) {
+          storageUnavailable = true;
         }
-      } catch (_) {
-        counter.textContent = 'This reader could not retain the marks. Please enable local storage and revisit the marginal notes to open the folio.';
+      }
+      if (assembled || found === 3) {
+        sealed.hidden = true;
+        revealed.hidden = false;
+      } else if (storageUnavailable) {
+        counter.textContent = 'This browser could not read the collected marks. Return to a marked folio and use its Assemble link to open this record.';
+      } else {
+        counter.textContent = found + ' of 3 marginal marks recovered. The remainder is hidden among the Court\'s general registers.';
       }
     })();
   </script>
