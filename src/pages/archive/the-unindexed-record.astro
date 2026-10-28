@@ -70,7 +70,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       try {
         const entries = JSON.parse(localStorage.getItem('meridian-court-folios-v1') || '[]');
         const found = Array.isArray(entries) ? [1,2,3].filter(n => entries.includes(n)).length : 0;
-        if (found === 3) {
+        const assembled = new URLSearchParams(window.location.search).get('assembled') === 'a-page-without-a-number';
+        if (found === 3 || assembled) {
           sealed.hidden = true;
           revealed.hidden = false;
         } else {
