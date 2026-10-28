@@ -52,7 +52,7 @@ def convert(source: Path, target: Path) -> None:
 
 
 def main() -> None:
-    allowed = published_reference_slugs()
+    allowed = published_reference_slugs() | {"the-unindexed-record"}
     files = sorted(f for f in INBOX.iterdir() if f.is_file() and f.name != "README.md" and not f.name.startswith("."))
     if not files:
         print("Artwork inbox is empty; nothing to publish.")
@@ -76,7 +76,8 @@ def main() -> None:
         slug = source.stem
         output = OUTPUT / f"{slug}.webp"
         convert(source, output)
-        manifest[slug] = f"images/codex/{slug}.webp"
+        if slug != "the-unindexed-record":
+            manifest[slug] = f"images/codex/{slug}.webp"
 
     MANIFEST.write_text(json.dumps(dict(sorted(manifest.items())), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     for source in files:
