@@ -121,7 +121,12 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
         panel.hidden = false;
         button.setAttribute('aria-expanded', 'true');
         progress.textContent = marks.length+' of 3 marginal marks observed.';
-        if ([1,2,3].every(id => marks.includes(id))) lastLink.hidden = false;
+        if ([1,2,3].every(id => marks.includes(id))) {
+          const destination = new URL(lastLink.getAttribute('href'), window.location.href);
+          destination.searchParams.set('assembled', 'a-page-without-a-number');
+          lastLink.href = destination.toString();
+          lastLink.hidden = false;
+        }
       };
       if (read().includes(Number(button.dataset.folioNumber))) show();
       button.addEventListener('click', () => {
