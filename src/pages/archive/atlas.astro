@@ -1,0 +1,52 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { referenceRecords } from '../../data/codex';
+import artworks from '../../data/codex-artworks.json';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const locations = referenceRecords.filter(entry => entry.kind === 'location');
+const phenomena = referenceRecords.filter(entry => entry.kind === 'phenomenon');
+const artworkMap = artworks as Record<string,string>;
+---
+<SiteLayout title="Illustrated Atlas" current="archive" description="An illustrated register of established places, structures and phenomena in released Meridian Court canon.">
+<main class="content-shell atlas-page">
+  <nav><a href={base+'archive/'}>← The Meridian Codex</a></nav>
+  <header>
+    <p class="overline">THE COURT · ATLAS OF KNOWN RECORDS</p>
+    <h1>The Illustrated <em>Atlas</em></h1>
+    <p>These plates depict places, structures and phenomena described in the released records. Their placement in this register does not imply a confirmed map, distance or chronology.</p>
+  </header>
+  {[
+    {title:'Places & structures',entries:locations},
+    {title:'Phenomena & observations',entries:phenomena}
+  ].map(section => <section class="atlas-section">
+    <h2>{section.title}</h2>
+    <div class="atlas-grid">
+      {section.entries.map(entry => <article class="atlas-plate">
+        <a href={base+'archive/'+entry.slug+'/'} aria-label={'Open Codex record for '+entry.title}>
+          <img src={base+(artworkMap[entry.slug] || 'images/codex/'+entry.slug+'.svg')} alt={'Interpretive Codex illustration of '+entry.title} width="640" height="640" loading="lazy" decoding="async"/>
+          <h3>{entry.title}</h3>
+        </a>
+        <p>{entry.summary}</p>
+        <small>{entry.albumTitle} · {entry.kind === 'location' ? 'PLACE / STRUCTURE' : 'PHENOMENON'}</small>
+      </article>)}
+    </div>
+  </section>)}
+  <p class="atlas-footer"><a href={base+'archive/threads/'}>Follow the Threads of History →</a></p>
+</main>
+<style>
+.atlas-page{padding-top:2rem;padding-bottom:5rem}
+.atlas-page a{color:inherit}
+.atlas-page header{max-width:780px;margin:3rem 0}
+.atlas-page h1{font:500 clamp(3rem,7vw,5rem)/1.1 'Cormorant Garamond',Georgia,serif}
+.atlas-page header p:last-child{line-height:1.7}
+.atlas-section{margin:3rem 0}
+.atlas-section h2{font:500 2.5rem 'Cormorant Garamond',Georgia,serif}
+.atlas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:1.4rem}
+.atlas-plate{border:1px solid rgba(173,139,82,.45);padding:1rem;background:rgba(173,139,82,.06)}
+.atlas-plate img{width:100%;aspect-ratio:4/3;object-fit:contain}
+.atlas-plate h3{font:500 1.8rem 'Cormorant Garamond',Georgia,serif;margin:.6rem 0}
+.atlas-plate p{line-height:1.55}
+.atlas-plate small{letter-spacing:.08em;opacity:.75}
+.atlas-footer{margin-top:3rem}
+</style>
+</SiteLayout>
