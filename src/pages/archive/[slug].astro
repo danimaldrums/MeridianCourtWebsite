@@ -16,7 +16,17 @@ const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
 const designation = record.kind === 'narration' ? archiveDesignation(record.slug) : undefined;
 const artworkOverride = (artworkOverrides as Record<string,string>)[record.slug];
 const companion = record.kind === 'narration' ? undefined : (peopleCompanion[record.slug] ?? placesCompanion[record.slug]);
-const related = record.kind === 'narration' ? [] : record.related.map(slug=>codexBySlug.get(slug)).filter((r):r is CodexRecord=>Boolean(r));
+// Spoken Archives also lead readers to neighbouring testimony and relevant released references.
+// This is navigation only: no additional story or unreleased material is introduced.
+const related: CodexRecord[] = record.kind === 'narration'
+  ? (() => {
+      const albumNarrations = codexRecords.filter(item => item.kind === 'narration' && item.albumSlug === record.albumSlug);
+      const position = albumNarrations.findIndex(item => item.slug === record.slug);
+      const neighbours = [albumNarrations[position - 1], albumNarrations[position + 1]].filter((item): item is CodexRecord => Boolean(item));
+      const references = codexRecords.filter(item => item.kind !== 'narration' && item.albumSlug === record.albumSlug).slice(0, 2);
+      return [...neighbours, ...references];
+    })()
+  : record.related.map(slug => codexBySlug.get(slug)).filter((item): item is CodexRecord => Boolean(item));
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
 ---
 <SiteLayout title={record.title} current="archive">
