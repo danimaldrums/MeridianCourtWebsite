@@ -41,6 +41,11 @@ const nextNarration = sequenceIndex >= 0 ? albumNarrationSequence[sequenceIndex 
 const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 'hall-of-architects': { number:2, label:'II', fragment:'WITHOUT A' }, 'the-path-within-archive-01': { number:3, label:'III', fragment:'NUMBER' } } as Record<string, {number:number;label:string;fragment:string}>)[record.slug];
 ---
 <SiteLayout title={record.title} current="archive">
+  <aside class="codex-personal-ledger content-shell" aria-label="Personal reading ledger">
+    <button id="codex-ledger-toggle" type="button" data-record-slug={record.slug} aria-pressed="false">Save this record</button>
+    <span id="codex-ledger-feedback" role="status" aria-live="polite"></span>
+    <a href={base+'archive/ledger/'}>My reading ledger →</a>
+  </aside>
   <section class="content-shell codex-detail manuscript-detail">
     <nav class="codex-breadcrumb" aria-label="Breadcrumb"><a href={base + 'archive/?chapter=' + record.kind + '#codex-index'}>← Back to the Codex</a><span aria-hidden="true">/</span><span>{kindLabels[record.kind]}</span></nav>
     <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
@@ -186,6 +191,34 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 @media(max-width:700px){.manuscript-ledger-row{grid-template-columns:1fr;gap:5px}.manuscript-chapter h3{font-size:36px}}
 .manuscript-art img.codex-approved-portrait{aspect-ratio:auto;object-fit:contain;height:auto;max-height:600px}
 </style>
+
+  <script>
+    const key = 'meridian-court-reading-ledger-v1';
+    const button = document.getElementById('codex-ledger-toggle') as HTMLButtonElement | null;
+    const feedback = document.getElementById('codex-ledger-feedback');
+    if (button && feedback) {
+      const slug = button.dataset.recordSlug || '';
+      const read = (): string[] => {
+        try {
+          const parsed: unknown = JSON.parse(localStorage.getItem(key) || '[]');
+          return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
+        } catch { return []; }
+      };
+      const render = () => {
+        const saved = read().includes(slug);
+        button.textContent = saved ? 'Remove bookmark' : 'Save this record';
+        button.setAttribute('aria-pressed',String(saved));
+        feedback.textContent = saved ? 'Saved on this device' : '';
+      };
+      button.addEventListener('click', () => {
+        const current = read();
+        const next = current.includes(slug) ? current.filter(x => x !== slug) : [...current,slug];
+        try { localStorage.setItem(key,JSON.stringify(next)); render(); }
+        catch { feedback.textContent = 'Browser storage is unavailable.'; }
+      });
+      render();
+    }
+  </script>
 </SiteLayout>
 
 <style is:global>
@@ -194,4 +227,12 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 .codex-reading-route-links{display:flex;flex-wrap:wrap;gap:.75rem}
 .codex-reading-route-links a{display:block;padding:.8rem 1rem;border:1px solid rgba(173,139,82,.4);color:inherit;text-decoration:none}
 .codex-reading-route-links a:hover,.codex-reading-route-links a:focus-visible{border-color:currentColor;text-decoration:underline}
+</style>
+
+<style is:global>
+.codex-personal-ledger{display:flex;align-items:center;flex-wrap:wrap;gap:.8rem;padding-top:1.2rem;padding-bottom:.4rem}
+.codex-personal-ledger button{border:1px solid rgba(173,139,82,.65);background:transparent;color:inherit;padding:.65rem 1rem;cursor:pointer}
+.codex-personal-ledger button:hover,.codex-personal-ledger button:focus-visible{border-color:currentColor}
+.codex-personal-ledger a{color:inherit}
+.codex-personal-ledger span{font-size:.85rem}
 </style>
