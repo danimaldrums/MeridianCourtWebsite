@@ -96,8 +96,21 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
    const cover = document.getElementById('codex-opening-cover');
    const chapterLink = new URLSearchParams(window.location.search).get('chapter');
    if (volume && cover && !window.location.hash && !chapterLink && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+     let finished = false;
+     let fallback;
+     const finishOpening = () => {
+       if (finished) return;
+       finished = true;
+       window.clearTimeout(fallback);
+       cover.hidden = true;
+       volume.classList.remove('is-opening');
+     };
+     cover.addEventListener('animationend', (event) => {
+       if (event.target === cover) finishOpening();
+     });
+     cover.addEventListener('animationcancel', finishOpening, {once:true});
      volume.classList.add('is-opening');
-     cover.addEventListener('animationend', () => {cover.hidden = true;volume.classList.remove('is-opening');}, {once:true});
+     fallback = window.setTimeout(finishOpening, 1800);
    }
    const nav=[...document.querySelectorAll('.codex-chapter-tab')];
    const rows=[...document.querySelectorAll('.codex-folio-row')];
