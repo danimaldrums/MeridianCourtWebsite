@@ -1,0 +1,51 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<SiteLayout title="Archive Investigation · The Unnumbered Folio" current="archive" description="A three-part investigation through the published Meridian Codex.">
+<main class="content-shell investigation">
+ <nav><a href={base+'archive/registry/'}>← Court Registry</a></nav>
+ <header><p class="overline">COURT REGISTRY · INVESTIGATION 001</p><h1>The Unnumbered <em>Folio</em></h1><p>Three marks appear in the margins of otherwise unrelated published records. Trace them, collect their fragments, and follow the recovered sequence to an unindexed testimony.</p></header>
+ <section class="investigation-sheet" aria-labelledby="investigation-progress-heading">
+  <p class="overline">FIELD NOTES · PERSONAL COPY</p><h2 id="investigation-progress-heading">Investigation progress</h2>
+  <p id="investigation-count" role="status" aria-live="polite">Checking your recovered marks…</p>
+  <ol class="investigation-stages">
+   <li><span class="stage-seal" id="stage-1">◇</span><div><strong>First impression</strong><p>A traveller's record bears a mark that does not belong to its sequence.</p><small id="stage-status-1">Not yet recovered</small></div></li>
+   <li><span class="stage-seal" id="stage-2">◇</span><div><strong>The second witness</strong><p>Look for a place where the Court's past was preserved and examined.</p><small id="stage-status-2">Not yet recovered</small></div></li>
+   <li><span class="stage-seal" id="stage-3">◇</span><div><strong>A voice in the archive</strong><p>The earliest preserved testimony of the Path Within holds the final fragment.</p><small id="stage-status-3">Not yet recovered</small></div></li>
+  </ol>
+  <p class="investigation-note">The clues refer only to already published material. Their sequence is an editorial discovery activity, not an additional canonical event.</p>
+  <div id="investigation-finish" hidden><p class="overline">THREE MARKS RECOVERED</p><h2>The sequence is complete.</h2><p>Your Registry now recognises the Unindexed Trail insignia. The assembled record is presented as unverified testimony, not established canon.</p><a class="investigation-action" href={base+'archive/the-unindexed-record/'}>Examine the unindexed record →</a></div>
+  <div id="investigation-continue"><a class="investigation-action" href={base+'archive/'}>Search the Codex →</a></div>
+ </section>
+ <section class="investigation-sheet"><h2>Archivist's guidance</h2><p>On a record page, examine the unusual mark in its margin. Recovered fragments are saved in this browser and will be reflected here when you return. Your discoveries can be included in a Court Registry backup.</p><p><a href={base+'archive/registry/'}>View insignia and clearance →</a></p></section>
+</main>
+<script is:inline>
+ (() => {
+  let marks=[];
+  try {
+   const value=JSON.parse(localStorage.getItem('meridian-court-folios-v1')||'[]');
+   if(Array.isArray(value))marks=[1,2,3].filter(n=>value.includes(n));
+  } catch {}
+  document.getElementById('investigation-count').textContent=marks.length+' of 3 marginal marks recovered';
+  for(let i=1;i<=3;i++){
+   const earned=marks.includes(i);
+   document.getElementById('stage-'+i).textContent=earned?'✧':'◇';
+   document.getElementById('stage-status-'+i).textContent=earned?'Fragment recovered':'Not yet recovered';
+  }
+  const finished=marks.length===3;
+  document.getElementById('investigation-finish').hidden=!finished;
+  document.getElementById('investigation-continue').hidden=finished;
+ })();
+</script>
+<style>
+.investigation{max-width:900px;padding:2rem 1rem 5rem}.investigation a{color:inherit}
+.investigation header{margin:3rem 0}.investigation header h1{font:500 clamp(2.8rem,7vw,5rem) 'Cormorant Garamond',Georgia,serif}.investigation header>p:last-child{max-width:650px;line-height:1.8}
+.investigation-sheet{border:1px solid rgba(173,139,82,.55);background:rgba(173,139,82,.05);padding:clamp(1.1rem,4vw,2rem);margin:1.5rem 0}
+.investigation-sheet h2{font:500 2rem 'Cormorant Garamond',Georgia,serif}.investigation-sheet p{line-height:1.7}
+.investigation-stages{padding:0;list-style:none}.investigation-stages li{display:flex;align-items:flex-start;gap:1.1rem;border-top:1px solid rgba(173,139,82,.3);padding:1.2rem 0}
+.stage-seal{color:#ad8b52;font-size:2.4rem;line-height:1}.investigation-stages strong{font-size:1.1rem}.investigation-stages p{margin:.35rem 0}.investigation-stages small{opacity:.7}
+.investigation-note{font-size:.85rem;opacity:.75}.investigation-action{display:inline-block;padding:.75rem 1.2rem;border:1px solid #ad8b52;text-decoration:none;margin:.7rem 0}
+#investigation-finish{border-top:1px solid #ad8b52;margin-top:1rem;padding-top:1rem}
+</style>
+</SiteLayout>
