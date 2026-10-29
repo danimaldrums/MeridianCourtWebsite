@@ -25,6 +25,7 @@ const levels = [
   <div class="registry-stats"><div><strong id="registry-read">0</strong><span>Records visited</span></div><div><strong id="registry-saved">0</strong><span>Saved pages</span></div><div><strong id="registry-marks">0 / 3</strong><span>Hidden marks</span></div></div>
  </section>
  <section class="registry-panel"><h2>Clearance designations</h2><ol class="registry-levels">{levels.map((level,i)=><li><span>LEVEL {['I','II','III','IV','V'][i]}</span><strong>{level.name}</strong><small>{i===0?'Initial designation':level.min+' unique published records visited'+(i>0?' · discovery requirement applies':'')}</small></li>)}</ol><p class="registry-footnote">Advancement is earned through reading and exploration. Levels II–V also require finding respectively one, two, three and three hidden marks. These designations are local achievements, not security permissions.</p></section>
+ <section class="registry-panel"><p class="overline">ACTIVE INVESTIGATION · 001</p><h2>The Unnumbered Folio</h2><p>Follow three clues through the published Codex, recover the marginal fragments and examine the resulting unindexed testimony.</p><a href={base+'archive/investigation/'}>Open your investigation dossier →</a></section>
  <section class="registry-panel" aria-labelledby="registry-achievements-title">
   <p class="overline">RECOGNITIONS OF THE COURT</p>
   <h2 id="registry-achievements-title">Archivist insignia</h2>
