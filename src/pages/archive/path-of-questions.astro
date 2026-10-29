@@ -1,0 +1,61 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const steps = [
+ {slug:'the-seekers-road',label:'The Departure',hint:'Every journey begins somewhere. Follow the road before the destination is known.',question:'What matters most about the Seeker’s first road?',choices:['A fixed geographical destination','The choice to begin','A known map of the Court'],correct:1,note:'The published record emphasises the decision to begin, not a mapped destination.'},
+ {slug:'the-silent-peak',label:'The Ascent',hint:'Beyond the road, look for the height where stillness and uncertainty meet.',question:'What does the record establish about the Silent Peak?',choices:['Its exact coordinates','That it is a different mountain','Its connection to stillness and revelation'],correct:2,note:'The exact geography remains deliberately unresolved.'},
+ {slug:'hall-of-architects',label:'The Hall',hint:'Seek the place of pillars, memory and questions, where a guide appears.',question:'Which statement about the Hall is supported?',choices:['Its origins are disputed','It is certainly the Celestial Engine','It was built by the Seeker'],correct:0,note:'The Hall’s origins remain uncertain; it is not confirmed as the Engine.'},
+ {slug:'the-first-architect',label:'The Encounter',hint:'The guide’s title resembles another, but resemblance is not identity.',question:'What can be concluded about the First Architect?',choices:['They are Aurex Valen','Their full identity remains unresolved','They built the Meridian'],correct:1,note:'The First Architect must not be equated with Aurex Valen without evidence.'},
+ {slug:'the-meridian',label:'The Threshold',hint:'The final question waits at the boundary the Seeker approaches and crosses.',question:'What purpose does the released record attribute to the Meridian?',choices:['To prepare the unready','To exclude everyone unworthy','To erase earlier history'],correct:0,note:'The published record describes preparation, not exclusion.'}
+];
+---
+<SiteLayout title="Archive Investigation · The Path of Questions" current="archive" description="A published-canon investigation following the Seeker through The Path Within.">
+<main class="content-shell path-case">
+ <nav><a href={base+'archive/registry/'}>← Court Registry</a></nav>
+ <header><p class="overline">COURT REGISTRY · INVESTIGATION 002 · ARC I</p><h1>The Path of <em>Questions</em></h1><p>Five connected records. Five questions about what the published history truly establishes. Follow the Seeker’s path through <cite>The Path Within</cite> and distinguish evidence from assumption.</p></header>
+ <section class="case-panel"><p class="overline">INVESTIGATION PROGRESS</p><h2 id="case-progress">Reviewing your field notes…</h2><div class="case-meter"><span id="case-fill"></span></div><p id="case-feedback" role="status" aria-live="polite"></p><ol class="case-steps">
+ {steps.map((step,i)=><li class="case-step" data-step={i}>
+  <div class="case-step-head"><span class="case-mark" aria-hidden="true">◇</span><div><small>RECORD {String(i+1).padStart(2,'0')} · {step.label.toUpperCase()}</small><h3>{step.label}</h3></div></div>
+  <p>{step.hint}</p>
+  <a href={base+'archive/'+step.slug+'/'}>Read the published Codex record →</a>
+  <fieldset><legend>{step.question}</legend>{step.choices.map((choice,j)=><label><input type="radio" name={'case-question-'+i} value={j}/><span>{choice}</span></label>)}</fieldset>
+  <button type="button" class="case-submit" data-answer={i}>Record finding</button><p class="case-result" aria-live="polite"></p>
+ </li>)}
+ </ol><div id="case-complete" hidden><p class="overline">INVESTIGATION COMPLETED</p><h2>The evidence has been assembled.</h2><p>Your Court Registry now recognises the <strong>Pathfinder of Questions</strong> insignia. This is a reading investigation based on released records, not a new canonical account.</p><a href={base+'archive/registry/'}>Return to the Registry →</a></div>
+ </section>
+</main>
+<script define:vars={{steps}}>
+ (()=>{
+ const key='meridian-court-investigations-v1';
+ const read=()=>{try{const v=JSON.parse(localStorage.getItem(key)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch{return {}}};
+ let data=read();
+ const completed=()=>Array.isArray(data.pathOfQuestions)?[...new Set(data.pathOfQuestions.filter(x=>Number.isInteger(x)&&x>=0&&x<steps.length))]:[];
+ const render=()=>{
+  const done=completed();
+  document.getElementById('case-progress').textContent=done.length+' of '+steps.length+' findings confirmed';
+  document.getElementById('case-fill').style.width=(done.length/steps.length*100)+'%';
+  document.querySelectorAll('.case-step').forEach((el,i)=>{
+   const solved=done.includes(i);el.classList.toggle('is-solved',solved);
+   el.querySelector('.case-mark').textContent=solved?'✧':'◇';
+   el.querySelector('.case-submit').disabled=solved;
+   if(solved)el.querySelector('.case-result').textContent='Finding recorded in your local Registry.';
+  });
+  document.getElementById('case-complete').hidden=done.length!==steps.length;
+ };
+ document.querySelectorAll('.case-submit').forEach(button=>button.addEventListener('click',()=>{
+  const i=Number(button.dataset.answer),el=button.closest('.case-step'),selected=el.querySelector('input[type=radio]:checked'),result=el.querySelector('.case-result');
+  if(!selected){result.textContent='Select a finding before recording it.';return}
+  if(Number(selected.value)!==steps[i].correct){result.textContent='Not supported by the record. Revisit the Codex entry and try again.';return}
+  data={...data,pathOfQuestions:[...new Set([...completed(),i])]};
+  try{localStorage.setItem(key,JSON.stringify(data));result.textContent=steps[i].note;document.getElementById('case-feedback').textContent='Finding confirmed: '+steps[i].label;render()}
+  catch{result.textContent='Browser storage is unavailable. Your finding cannot be saved.'}
+ }));
+ render();
+ })();
+</script>
+<style>
+.path-case{max-width:940px;padding-top:2rem;padding-bottom:5rem;overflow-wrap:anywhere}.path-case a{color:inherit}.path-case header{margin:3rem 0;max-width:720px}.path-case h1{font:500 clamp(2.7rem,7vw,5rem) 'Cormorant Garamond',Georgia,serif}.path-case header p:last-child{line-height:1.8}
+.case-panel{border:1px solid rgba(173,139,82,.55);background:rgba(173,139,82,.04);padding:clamp(1rem,4vw,2rem)}.case-panel h2{font:500 2rem 'Cormorant Garamond',Georgia,serif}.case-meter{height:7px;border:1px solid #ad8b52}.case-meter span{display:block;height:100%;background:#ad8b52;width:0}
+.case-steps{list-style:none;padding:0}.case-step{border-top:1px solid rgba(173,139,82,.45);padding:1.5rem 0}.case-step-head{display:flex;gap:1rem;align-items:center}.case-mark{font-size:2.5rem;color:#ad8b52}.case-step h3{margin:.2rem 0;font:500 1.8rem 'Cormorant Garamond',Georgia,serif}.case-step p{line-height:1.6}.case-step small{letter-spacing:.12em}.case-step fieldset{border:0;padding:1rem 0;margin:1rem 0}.case-step legend{font-weight:600;margin-bottom:.7rem}.case-step label{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem 0;cursor:pointer}.case-step input{margin-top:.25rem;accent-color:#ad8b52}.case-submit{background:transparent;color:inherit;border:1px solid #ad8b52;padding:.75rem 1.2rem;font:inherit;cursor:pointer}.case-submit:disabled{opacity:.5;cursor:default}.case-result{min-height:1.5rem;font-size:.9rem}.case-step.is-solved{background:rgba(173,139,82,.045)}#case-complete{border-top:2px solid #ad8b52;padding-top:1rem}
+</style>
+</SiteLayout>
