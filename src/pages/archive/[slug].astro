@@ -51,7 +51,7 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
       <article class="manuscript-page manuscript-left">
         <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>{designation ? designation.label : 'FOLIO ✧'}</span></header>
-        {record.slug === 'the-seeker' ? <a class="seeker-investigation-sigil" href={base+'archive/path-of-questions/'} aria-label="Examine an unusual symbol in the Seeker’s archive" title="A mark unlike the others">✥</a> : <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>}
+        {record.slug === 'the-seeker' ? <a class="seeker-investigation-sigil" href={base+'archive/path-of-questions/'} aria-label="Examine an unusual symbol in the Seeker’s archive" title="A compass with no marked destination"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="11.5" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="16" cy="16" r="8.5" fill="none" stroke="currentColor" stroke-width=".45" opacity=".7"/><path d="M16 2.5 18.6 13.4 29.5 16 18.6 18.6 16 29.5 13.4 18.6 2.5 16 13.4 13.4Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M16 6 18 16 16 26 14 16Z" fill="currentColor" opacity=".75"/><circle cx="16" cy="16" r="1.6" fill="currentColor"/></svg></a> : <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>}
         <p class="folio-eyebrow">{kindLabels[record.kind]} · REGISTRY ACCESS I</p>
         <h1>{record.title}</h1>
         <div class="manuscript-art">
