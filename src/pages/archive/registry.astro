@@ -24,7 +24,7 @@ const levels = [
   <div class="registry-meter" role="progressbar" aria-label="Progress to next clearance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="registry-meter"><span id="registry-fill"></span></div>
   <div class="registry-stats"><div><strong id="registry-read">0</strong><span>Records visited</span></div><div><strong id="registry-saved">0</strong><span>Saved pages</span></div><div><strong id="registry-marks">0 / 3</strong><span>Hidden marks</span></div></div>
  </section>
- <section class="registry-panel"><p class="overline">ARCHIVIST RECORD · INVESTIGATION COLLECTION</p><h2>Investigation collection</h2><div id="registry-case-001" class="registry-case"><span class="registry-case-symbol" aria-hidden="true">◇</span><div><strong>The Unnumbered Folio</strong><p id="registry-case-status">Investigation in progress</p><a href={base+'archive/investigation/'}>View investigation dossier →</a></div></div></section>
+ <section class="registry-panel"><p class="overline">ARCHIVIST RECORD · INVESTIGATION COLLECTION</p><h2>Investigation collection</h2><div id="registry-case-001" class="registry-case"><span class="registry-case-symbol" aria-hidden="true">◇</span><div><strong>The Unnumbered Folio</strong><p id="registry-case-status">Investigation in progress</p><a href={base+'archive/investigation/'}>View investigation dossier →</a></div></div><div id="registry-case-002" class="registry-case"><span class="registry-case-symbol" aria-hidden="true">◇</span><div><strong>The Path of Questions · Arc I</strong><p id="registry-case-002-status">Investigation not yet completed</p><a href={base+'archive/path-of-questions/'}>Follow the Seeker's evidence →</a></div></div></section>
  <section class="registry-panel"><h2>Clearance designations</h2><ol class="registry-levels">{levels.map((level,i)=><li><span>LEVEL {['I','II','III','IV','V'][i]}</span><strong>{level.name}</strong><small>{i===0?'Initial designation':level.min+' unique published records visited'+(i>0?' · discovery requirement applies':'')}</small></li>)}</ol><p class="registry-footnote">Advancement is earned through reading and exploration. Levels II–V also require finding respectively one, two, three and three hidden marks. These designations are local achievements, not security permissions.</p></section>
  <section class="registry-panel"><p class="overline">ACTIVE INVESTIGATION · 001</p><h2>The Unnumbered Folio</h2><p>Follow three clues through the published Codex, recover the marginal fragments and examine the resulting unindexed testimony.</p><a href={base+'archive/investigation/'}>Open your investigation dossier →</a></section>
  <section class="registry-panel" aria-labelledby="registry-achievements-title">
@@ -52,7 +52,8 @@ const levels = [
    name:typeof loadProfile()?.name==='string'?loadProfile().name.slice(0,40):'',
    visited:safeList(getJSON(readKey,[])).filter(x=>allowed.has(x)),
    saved:safeList(getJSON(ledgerKey,[])).filter(x=>allowed.has(x)||x==='threads-of-history'),
-   marks:getMarks()
+   marks:getMarks(),
+   investigations:{pathOfQuestions:(()=>{const v=getJSON('meridian-court-investigations-v1',{});return Array.isArray(v?.pathOfQuestions)?[...new Set(v.pathOfQuestions.filter(x=>Number.isInteger(x)&&x>=0&&x<5))]:[]})()}
  });
  const rank=(count,marks)=>{let i=0;for(let n=1;n<levels.length;n++){if(count>=levels[n].min&&marks>=Math.min(n,3))i=n;}return i};
  const achievements=[
@@ -60,7 +61,8 @@ const levels = [
    {id:'record-keeper',name:'Record Keeper',hint:'Save five pages in your reading ledger.',earned:s=>s.saved.length>=5},
    {id:'first-mark',name:'A Mark in the Margin',hint:'Discover one hidden marginal mark.',earned:s=>s.marks.length>=1},
    {id:'unindexed',name:'The Unindexed Trail',hint:'Find all three hidden marginal marks.',earned:s=>s.marks.length===3},
-   {id:'deep-reader',name:'Deep Reader',hint:'Visit twenty distinct published Codex records.',earned:s=>s.visited.length>=20}
+   {id:'deep-reader',name:'Deep Reader',hint:'Visit twenty distinct published Codex records.',earned:s=>s.visited.length>=20},
+   {id:'pathfinder',name:'Pathfinder of Questions',hint:'Complete the five findings in the Arc I investigation.',earned:s=>s.investigations.pathOfQuestions.length===5}
  ];
  const showAchievements=s=>{
    const list=document.getElementById('registry-achievements');
@@ -80,6 +82,9 @@ const levels = [
  const render=()=>{
    const s=getState(),i=rank(s.visited.length,s.marks.length),level=levels[i],next=levels[i+1];
    showAchievements(s);
+   const pathCount=s.investigations.pathOfQuestions.length;
+   document.getElementById('registry-case-002-status').textContent=pathCount===5?'COMPLETED · All five findings confirmed':pathCount+' of 5 findings confirmed';
+   document.getElementById('registry-case-002').classList.toggle('is-complete',pathCount===5);
    document.getElementById('registry-seal-image').src=registryBase+'images/registry/'+insignia[i]+'-crest.png';
    document.getElementById('registry-seal').setAttribute('data-clearance',String(i));
    const caseComplete=s.marks.length===3;
@@ -130,6 +135,8 @@ const levels = [
      localStorage.setItem(readKey,JSON.stringify(visited));
      localStorage.setItem(ledgerKey,JSON.stringify(saved));
      localStorage.setItem(marksKey,JSON.stringify(marks));
+     const findings=Array.isArray(data.investigations?.pathOfQuestions)?[...new Set(data.investigations.pathOfQuestions.filter(x=>Number.isInteger(x)&&x>=0&&x<5))]:[];
+     localStorage.setItem('meridian-court-investigations-v1',JSON.stringify({pathOfQuestions:findings}));
      feedback.textContent='Registry backup imported successfully.';render();
    }catch(err){feedback.textContent=err instanceof Error?err.message:'Unable to import backup.'}
    finally{target.value=''}
@@ -156,7 +163,7 @@ const levels = [
 .registry-achievements small{line-height:1.5}
 .registry-promotion:not(:empty){padding:1rem;border-left:3px solid #ad8b52}
 
-.registry-case{display:flex;align-items:center;gap:1.2rem;border:1px solid rgba(173,139,82,.4);padding:1rem}.registry-case.is-complete{border-color:#ad8b52;background:rgba(173,139,82,.12)}.registry-case-symbol{font-size:2.5rem;color:#ad8b52}.registry-case p{margin:.3rem 0}
+.registry-case{margin-top:.85rem;display:flex;align-items:center;gap:1.2rem;border:1px solid rgba(173,139,82,.4);padding:1rem}.registry-case.is-complete{border-color:#ad8b52;background:rgba(173,139,82,.12)}.registry-case-symbol{font-size:2.5rem;color:#ad8b52}.registry-case p{margin:.3rem 0}
 .registry-dialog{background:#171b20;color:#f2e4c9;border:1px solid #ad8b52;max-width:min(90vw,520px);padding:0;box-shadow:0 20px 90px #0008}.registry-dialog::backdrop{background:rgba(0,0,0,.75)}.registry-dialog-inner{text-align:center;padding:clamp(1.5rem,5vw,3rem)}.registry-dialog h2{font:500 2.6rem Georgia,serif}.registry-dialog p{line-height:1.7}.registry-promotion-seal{font-size:5rem;color:#d7b47c}.registry-dialog button{margin-top:1rem;color:#f2e4c9}
 @media(prefers-reduced-motion:reduce){.registry-dialog *{animation:none!important;transition:none!important}}
 .registry-seal img{width:100%;height:100%;object-fit:contain}.registry-promotion-seal img{width:min(180px,50vw);height:auto;display:block;margin:auto}
