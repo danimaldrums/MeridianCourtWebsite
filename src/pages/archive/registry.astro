@@ -20,10 +20,11 @@ const levels = [
   <label for="registry-name">Archivist designation</label>
   <div class="registry-name-row"><input id="registry-name" maxlength="40" autocomplete="off" placeholder="Choose an Archivist name"/><button id="registry-save-name" type="button">Save designation</button></div>
   <p id="registry-status" role="status" aria-live="polite"></p>
-  <div class="registry-clearance"><div class="registry-seal" aria-hidden="true">◇</div><div><p class="overline">CURRENT CLEARANCE</p><h2 id="registry-level">Observer</h2><p id="registry-next">Begin exploring the records.</p></div></div>
+  <div class="registry-clearance"><div class="registry-seal" aria-hidden="true" id="registry-seal">◇</div><div><p class="overline">CURRENT CLEARANCE</p><h2 id="registry-level">Observer</h2><p id="registry-next">Begin exploring the records.</p></div></div>
   <div class="registry-meter" role="progressbar" aria-label="Progress to next clearance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="registry-meter"><span id="registry-fill"></span></div>
   <div class="registry-stats"><div><strong id="registry-read">0</strong><span>Records visited</span></div><div><strong id="registry-saved">0</strong><span>Saved pages</span></div><div><strong id="registry-marks">0 / 3</strong><span>Hidden marks</span></div></div>
  </section>
+ <section class="registry-panel"><p class="overline">ARCHIVIST RECORD · INVESTIGATION COLLECTION</p><h2>Investigation collection</h2><div id="registry-case-001" class="registry-case"><span class="registry-case-symbol" aria-hidden="true">◇</span><div><strong>The Unnumbered Folio</strong><p id="registry-case-status">Investigation in progress</p><a href={base+'archive/investigation/'}>View investigation dossier →</a></div></div></section>
  <section class="registry-panel"><h2>Clearance designations</h2><ol class="registry-levels">{levels.map((level,i)=><li><span>LEVEL {['I','II','III','IV','V'][i]}</span><strong>{level.name}</strong><small>{i===0?'Initial designation':level.min+' unique published records visited'+(i>0?' · discovery requirement applies':'')}</small></li>)}</ol><p class="registry-footnote">Advancement is earned through reading and exploration. Levels II–V also require finding respectively one, two, three and three hidden marks. These designations are local achievements, not security permissions.</p></section>
  <section class="registry-panel"><p class="overline">ACTIVE INVESTIGATION · 001</p><h2>The Unnumbered Folio</h2><p>Follow three clues through the published Codex, recover the marginal fragments and examine the resulting unindexed testimony.</p><a href={base+'archive/investigation/'}>Open your investigation dossier →</a></section>
  <section class="registry-panel" aria-labelledby="registry-achievements-title">
@@ -33,6 +34,9 @@ const levels = [
   <ul id="registry-achievements" class="registry-achievements" aria-live="polite"></ul>
   <p id="registry-promotion" class="registry-promotion" role="status" aria-live="polite"></p>
  </section>
+ <dialog id="registry-promotion-dialog" aria-labelledby="registry-promotion-title" class="registry-dialog">
+ <div class="registry-dialog-inner"><p class="overline">THE COURT REGISTRY · NOTICE OF ADVANCEMENT</p><div id="registry-promotion-seal" class="registry-promotion-seal" aria-hidden="true">✧</div><h2 id="registry-promotion-title">Clearance advanced</h2><p id="registry-promotion-copy"></p><button id="registry-promotion-dismiss" type="button">Return to the Registry</button></div>
+ </dialog>
  <section class="registry-panel"><h2>Preserve your progress</h2><p>Export a backup to move progress to another browser or keep it safe. Importing replaces the current local Registry progress after confirmation. Backup files contain your chosen designation, reading history, bookmarks and discovery marks; keep them private.</p><div class="registry-actions"><button id="registry-export" type="button">Export Registry backup</button><label class="registry-import">Import Registry backup <input id="registry-import-file" type="file" accept=".json,application/json"/></label></div><p id="registry-import-status" role="status" aria-live="polite"></p></section>
  <p><a href={base+'archive/ledger/'}>Open your reading ledger →</a> · <a href={base+'archive/threads/'}>Follow the Threads of History →</a></p>
 </main>
@@ -69,12 +73,25 @@ const levels = [
      details.append(title,hint);li.append(symbol,details);li.className=earned?'is-earned':'';list.append(li);
    });
  };
+ const insignia=['◇','✧','❖','✦','✺'];
+ const promotionDialog=document.getElementById('registry-promotion-dialog');
+ document.getElementById('registry-promotion-dismiss').addEventListener('click',()=>promotionDialog.close());
  const render=()=>{
    const s=getState(),i=rank(s.visited.length,s.marks.length),level=levels[i],next=levels[i+1];
    showAchievements(s);
+   document.getElementById('registry-seal').textContent=insignia[i];
+   document.getElementById('registry-seal').setAttribute('data-clearance',String(i));
+   const caseComplete=s.marks.length===3;
+   document.getElementById('registry-case-status').textContent=caseComplete?'COMPLETED · Three marginal fragments recovered':s.marks.length+' of 3 fragments recovered';
+   document.getElementById('registry-case-001').classList.toggle('is-complete',caseComplete);
    const lastKnown=getJSON('meridian-court-last-clearance-v1',null);
    const promotion=document.getElementById('registry-promotion');
-   if(typeof lastKnown==='number'&&i>lastKnown)promotion.textContent='✧ Clearance advanced: '+level.name+'. Your exploration has been recognised by the Registry.';
+   if(typeof lastKnown==='number'&&i>lastKnown){
+     promotion.textContent='✧ Clearance advanced: '+level.name+'. Your exploration has been recognised by the Registry.';
+     document.getElementById('registry-promotion-seal').textContent=insignia[i];
+     document.getElementById('registry-promotion-copy').textContent='Your published-record exploration has earned Level '+(i+1)+' — '+level.name+'. This is a reader designation, not access to restricted records.';
+     if(!promotionDialog.open&&typeof promotionDialog.showModal==='function')promotionDialog.showModal();
+   }
    try{localStorage.setItem('meridian-court-last-clearance-v1',JSON.stringify(i))}catch{}
    nameInput.value=s.name;
    document.getElementById('registry-level').textContent=level.name;
@@ -137,5 +154,9 @@ const levels = [
 .registry-achievements li div{display:flex;flex-direction:column;gap:.3rem}
 .registry-achievements small{line-height:1.5}
 .registry-promotion:not(:empty){padding:1rem;border-left:3px solid #ad8b52}
+.registry-seal{width:84px;height:84px;flex-shrink:0;border:2px double #ad8b52;border-radius:50%;display:grid;place-items:center;font-family:Georgia,serif;text-shadow:0 0 12px rgba(173,139,82,.4)}
+.registry-case{display:flex;align-items:center;gap:1.2rem;border:1px solid rgba(173,139,82,.4);padding:1rem}.registry-case.is-complete{border-color:#ad8b52;background:rgba(173,139,82,.12)}.registry-case-symbol{font-size:2.5rem;color:#ad8b52}.registry-case p{margin:.3rem 0}
+.registry-dialog{background:#171b20;color:#f2e4c9;border:1px solid #ad8b52;max-width:min(90vw,520px);padding:0;box-shadow:0 20px 90px #0008}.registry-dialog::backdrop{background:rgba(0,0,0,.75)}.registry-dialog-inner{text-align:center;padding:clamp(1.5rem,5vw,3rem)}.registry-dialog h2{font:500 2.6rem Georgia,serif}.registry-dialog p{line-height:1.7}.registry-promotion-seal{font-size:5rem;color:#d7b47c}.registry-dialog button{margin-top:1rem;color:#f2e4c9}
+@media(prefers-reduced-motion:reduce){.registry-dialog *{animation:none!important;transition:none!important}}
 </style>
 </SiteLayout>
