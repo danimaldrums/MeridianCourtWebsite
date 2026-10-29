@@ -155,7 +155,7 @@ const levels = [
 .registry-achievements li div{display:flex;flex-direction:column;gap:.3rem}
 .registry-achievements small{line-height:1.5}
 .registry-promotion:not(:empty){padding:1rem;border-left:3px solid #ad8b52}
-.registry-seal{width:84px;height:84px;flex-shrink:0;border:2px double #ad8b52;border-radius:50%;display:grid;place-items:center;font-family:Georgia,serif;text-shadow:0 0 12px rgba(173,139,82,.4)}
+
 .registry-case{display:flex;align-items:center;gap:1.2rem;border:1px solid rgba(173,139,82,.4);padding:1rem}.registry-case.is-complete{border-color:#ad8b52;background:rgba(173,139,82,.12)}.registry-case-symbol{font-size:2.5rem;color:#ad8b52}.registry-case p{margin:.3rem 0}
 .registry-dialog{background:#171b20;color:#f2e4c9;border:1px solid #ad8b52;max-width:min(90vw,520px);padding:0;box-shadow:0 20px 90px #0008}.registry-dialog::backdrop{background:rgba(0,0,0,.75)}.registry-dialog-inner{text-align:center;padding:clamp(1.5rem,5vw,3rem)}.registry-dialog h2{font:500 2.6rem Georgia,serif}.registry-dialog p{line-height:1.7}.registry-promotion-seal{font-size:5rem;color:#d7b47c}.registry-dialog button{margin-top:1rem;color:#f2e4c9}
 @media(prefers-reduced-motion:reduce){.registry-dialog *{animation:none!important;transition:none!important}}
@@ -170,7 +170,7 @@ const levels = [
 .registry-clearance{min-width:0;max-width:100%;flex-wrap:wrap}
 .registry-clearance>div:last-child{flex:1 1 200px;min-width:0}
 .registry-clearance h2{font-size:clamp(1.6rem,6vw,2.5rem);overflow-wrap:anywhere}
-.registry-seal{width:116px;height:116px;min-width:116px;min-height:116px;padding:0;overflow:hidden;border:0;border-radius:0;background:#10151c}
+.registry-seal{width:116px;height:116px;min-width:116px;min-height:116px;padding:0;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;text-shadow:none;display:grid;place-items:center}
 .registry-seal img{display:block;width:116px!important;height:116px!important;max-width:100%;max-height:100%;object-fit:contain!important;aspect-ratio:1}
 .registry-dialog{width:min(92vw,520px);max-width:calc(100vw - 24px)}
 .registry-promotion-seal img{max-width:100%;object-fit:contain!important}
