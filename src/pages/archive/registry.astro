@@ -160,5 +160,31 @@ const levels = [
 .registry-dialog{background:#171b20;color:#f2e4c9;border:1px solid #ad8b52;max-width:min(90vw,520px);padding:0;box-shadow:0 20px 90px #0008}.registry-dialog::backdrop{background:rgba(0,0,0,.75)}.registry-dialog-inner{text-align:center;padding:clamp(1.5rem,5vw,3rem)}.registry-dialog h2{font:500 2.6rem Georgia,serif}.registry-dialog p{line-height:1.7}.registry-promotion-seal{font-size:5rem;color:#d7b47c}.registry-dialog button{margin-top:1rem;color:#f2e4c9}
 @media(prefers-reduced-motion:reduce){.registry-dialog *{animation:none!important;transition:none!important}}
 .registry-seal img{width:100%;height:100%;object-fit:contain}.registry-promotion-seal img{width:min(180px,50vw);height:auto;display:block;margin:auto}
+
+/* Keep the local Registry usable at iPhone widths and prevent input-focus zoom. */
+.registry-shell{width:100%;min-width:0;box-sizing:border-box;overflow-wrap:anywhere}
+.registry-shell *{box-sizing:border-box}
+.registry-panel{min-width:0;max-width:100%}
+.registry-name-row input,.registry-import input{font-size:16px;max-width:100%;min-width:0}
+.registry-name-row button{font-size:16px}
+.registry-clearance{min-width:0;max-width:100%;flex-wrap:wrap}
+.registry-clearance>div:last-child{flex:1 1 200px;min-width:0}
+.registry-clearance h2{font-size:clamp(1.6rem,6vw,2.5rem);overflow-wrap:anywhere}
+.registry-seal{width:116px;height:116px;min-width:116px;min-height:116px;padding:0;overflow:hidden;border:0;border-radius:0;background:#10151c}
+.registry-seal img{display:block;width:116px!important;height:116px!important;max-width:100%;max-height:100%;object-fit:contain!important;aspect-ratio:1}
+.registry-dialog{width:min(92vw,520px);max-width:calc(100vw - 24px)}
+.registry-promotion-seal img{max-width:100%;object-fit:contain!important}
+@media(max-width:560px){
+ .registry-shell{padding-inline:16px}
+ .registry-panel{padding:16px}
+ .registry-name-row{flex-direction:column}
+ .registry-name-row input,.registry-name-row button{width:100%}
+ .registry-clearance{gap:12px}
+ .registry-seal,.registry-seal img{width:96px!important;height:96px!important;min-width:96px;min-height:96px}
+ .registry-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .registry-stats div{padding:8px}
+ .registry-stats span{font-size:.72rem;overflow-wrap:anywhere}
+ .registry-actions>*{max-width:100%}
+}
 </style>
 </SiteLayout>
