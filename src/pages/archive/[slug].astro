@@ -51,7 +51,7 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     <div class="manuscript-book" role="group" aria-label={'Codex entry: '+record.title}>
       <article class="manuscript-page manuscript-left">
         <header class="manuscript-page-header"><span>THE MERIDIAN CODEX</span><span>{designation ? designation.label : 'FOLIO ✧'}</span></header>
-        <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>
+        {record.slug === 'the-seeker' ? <a class="seeker-investigation-sigil" href={base+'archive/path-of-questions/'} aria-label="Examine an unusual symbol in the Seeker’s archive" title="A mark unlike the others">✥</a> : <div class="manuscript-decor" aria-hidden="true"><span>✧</span></div>}
         <p class="folio-eyebrow">{kindLabels[record.kind]} · REGISTRY ACCESS I</p>
         <h1>{record.title}</h1>
         <div class="manuscript-art">
@@ -243,4 +243,11 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 .codex-personal-ledger button:hover,.codex-personal-ledger button:focus-visible{border-color:currentColor}
 .codex-personal-ledger a{color:inherit}
 .codex-personal-ledger span{font-size:.85rem}
+</style>
+
+<style is:global>
+/* A discreet, discoverable marginal seal on the Seeker's published folio. */
+.seeker-investigation-sigil{display:grid;place-items:center;width:44px;height:44px;margin:9px auto 15px;color:#896b43!important;border:1px solid rgba(137,107,67,.38);border-radius:50%;text-decoration:none!important;font:normal 24px Georgia,serif;opacity:.65;transform:rotate(-12deg);transition:opacity .2s ease,transform .2s ease,box-shadow .2s ease}
+.seeker-investigation-sigil:hover,.seeker-investigation-sigil:focus-visible{opacity:1;transform:rotate(0);box-shadow:0 0 0 3px rgba(137,107,67,.16);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.seeker-investigation-sigil{transition:none}}
 </style>
