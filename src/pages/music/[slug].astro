@@ -1,0 +1,36 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { arcs, chronicles } from '../../data/albums';
+import { albumStories } from '../../data/album-stories';
+import { codexBySlug } from '../../data/codex';
+export function getStaticPaths(){
+ return [...arcs,...chronicles].map(album=>({params:{slug:album.slug},props:{album}}));
+}
+const {album}=Astro.props;
+const story=albumStories[album.slug];
+const base=import.meta.env.BASE_URL.endsWith('/')?import.meta.env.BASE_URL:import.meta.env.BASE_URL+'/';
+const connections=story.references.map(slug=>codexBySlug.get(slug)).filter(Boolean);
+---
+<SiteLayout title={album.title+' · The Story'} current="music" description={'Discover the story behind '+album.title+', a released Meridian Court album.'}>
+<main class="content-shell album-story">
+<nav class="album-back"><a href={base+'music/#'+album.slug}>← All released albums</a></nav>
+<header class="album-story-hero">
+<div class="album-story-cover"><img src={base+album.cover} alt={'Official album cover for '+album.title} width="600" height="600" decoding="async"/></div>
+<div class="album-story-heading"><p class="overline">{album.arc} · {album.phase}</p><h1>{album.title}</h1><p class="album-story-tagline">{album.tagline}</p><p class="album-story-opening">{story.opening}</p><a href="#read-the-story" class="album-story-action">Read the story ↓</a></div>
+</header>
+<section id="read-the-story" class="album-story-text">
+<p class="overline">THE STORY BEHIND THE MUSIC</p><h2>A story told across an album</h2>
+<p class="album-story-preface">This guide follows the events and themes of the released album. It includes story spoilers, but leaves the music to tell its own version through songs and spoken Archives.</p>
+{story.chapters.map((chapter,index)=><section class="album-story-chapter"><p class="overline">PART {String(index+1).padStart(2,'0')}</p><h3>{chapter.heading}</h3>{chapter.paragraphs.map(p=><p>{p}</p>)}</section>)}
+</section>
+{connections.length>0&&<section class="album-story-connections"><p class="overline">CONTINUE EXPLORING</p><h2>People, places and mysteries</h2><p>Follow the published Codex records connected to this album.</p><div class="album-story-links">{connections.map(item=><a href={base+'archive/'+item.slug+'/'}>{item.title} <span aria-hidden="true">↗</span></a>)}</div></section>}
+<footer class="album-story-footer"><p>Each album is designed to be experienced through its music. This written guide offers a starting point, not a replacement for listening.</p><a href={base+'music/'}>Explore the other albums →</a></footer>
+</main>
+</SiteLayout>
+<style>
+.album-story{max-width:1120px;padding:2rem 1rem 6rem}.album-story a{color:inherit}.album-back{margin-bottom:2.5rem}.album-story-hero{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);align-items:center;gap:clamp(1.5rem,5vw,5rem);padding:1.5rem 0 4rem;border-bottom:1px solid rgba(173,139,82,.5)}
+.album-story-cover img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;box-shadow:0 15px 55px #0008}.album-story-heading h1{font:500 clamp(3rem,6vw,5.5rem)/.98 'Cormorant Garamond',Georgia,serif;margin:.5rem 0 1.4rem}.album-story-tagline{font:italic 1.5rem 'Cormorant Garamond',Georgia,serif}.album-story-opening{font-size:1.12rem;line-height:1.8;max-width:540px}.album-story-action{display:inline-block;border:1px solid #ad8b52;padding:.85rem 1.25rem;margin-top:1.5rem;text-decoration:none}
+.album-story-text{max-width:760px;margin:4rem auto}.album-story-text h2,.album-story-connections h2{font:500 clamp(2.3rem,5vw,3.6rem) 'Cormorant Garamond',Georgia,serif}.album-story-preface{line-height:1.8;opacity:.85}.album-story-chapter{margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(173,139,82,.4)}.album-story-chapter h3{font:500 2.4rem 'Cormorant Garamond',Georgia,serif;margin:.5rem 0 1rem}.album-story-chapter p:not(.overline){line-height:1.95;font-size:1.06rem}
+.album-story-connections{border-top:1px solid rgba(173,139,82,.5);padding:2.5rem 0}.album-story-links{display:flex;flex-wrap:wrap;gap:.7rem}.album-story-links a{border:1px solid rgba(173,139,82,.5);padding:.7rem 1rem;text-decoration:none}.album-story-links a:hover,.album-story-action:hover{background:rgba(173,139,82,.15)}.album-story-footer{border-top:1px solid rgba(173,139,82,.4);padding-top:2rem;line-height:1.8}
+@media(max-width:720px){.album-story-hero{grid-template-columns:1fr}.album-story-cover{max-width:340px;margin:auto}.album-story-text{margin:2.5rem auto}}
+</style>
