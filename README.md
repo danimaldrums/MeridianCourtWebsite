@@ -36,7 +36,7 @@ The First Circle is released and its creator-approved cover can now be uploaded 
 
 ## Public Codex (v0.4)
 
-The [Meridian Codex](https://danimaldrums.github.io/MeridianCourtWebsite/archive/) now has a searchable index with 54 editorially curated public records: 19 character/location/phenomenon entries and 35 released, canonical narrated Archive scripts. Every record has a dedicated page with optional spoiler-revealing text, and reference entries link to related public records. The archive deliberately does not expose unreleased materials, Suno prompts or private governance files.
+The [Meridian Codex](https://danimaldrums.github.io/MeridianCourtWebsite/archive/) now has a searchable index with 59 editorially curated public records: 19 character/location/phenomenon entries and 40 released, canonical narrated Archive scripts. Every record has a dedicated page with optional spoiler-revealing text, and reference entries link to related public records. The archive deliberately does not expose unreleased materials, Suno prompts or private governance files.
 
 The three-mark hidden-record puzzle is published. It leads to **The Unindexed Record — The Shoreless Light**, a creator-approved website-exclusive mystery presented as **unverified in-world testimony**, not Locked Canon. Its notebook-style illustration is published separately from the 19 approved Codex reference portraits and scenes. Also note the Arc I `The First Page` source narration is currently very short and should be cross-checked against released audio.
 
