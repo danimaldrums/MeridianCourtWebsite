@@ -65,5 +65,4 @@ export const chronicles: Album[] = [
     tone: 'gold',
     // The approved PNG remains in the private archive; add its approved WebP export before setting this path.
     cover: ''
-  }
-;
+  }];
