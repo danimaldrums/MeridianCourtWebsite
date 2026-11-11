@@ -5,17 +5,19 @@ import { archiveDesignation } from '../../data/archive-identifiers';
 import artworkOverrides from '../../data/codex-artworks.json';
 import { peopleCompanion } from '../../data/codex-companion-people';
 import { placesCompanion } from '../../data/codex-companion-places';
+import { firstCircleCompanions } from '../../data/first-circle';
 import { arcs, chronicles } from '../../data/albums';
 export function getStaticPaths() {
   return codexRecords.map(record => ({ params: { slug: record.slug }, props: { record } }));
 }
 const { record } = Astro.props as { record: CodexRecord };
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',narration:'ARCHIVE NARRATION'};
+const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',history:'HISTORICAL RECORD',narration:'ARCHIVE NARRATION'};
 const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
 const designation = record.kind === 'narration' ? archiveDesignation(record.slug) : undefined;
 const artworkOverride = (artworkOverrides as Record<string,string>)[record.slug];
-const companion = record.kind === 'narration' ? undefined : (peopleCompanion[record.slug] ?? placesCompanion[record.slug]);
+const companion = record.kind === 'narration' ? undefined : (firstCircleCompanions[record.slug] ?? peopleCompanion[record.slug] ?? placesCompanion[record.slug]);
+const artworkPending = record.kind !== 'narration' && Boolean(record.artworkPending);
 // Spoken Archives also lead readers to neighbouring testimony and relevant released references.
 // This is navigation only: no additional story or unreleased material is introduced.
 const related: CodexRecord[] = record.kind === 'narration'
@@ -59,8 +61,17 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
             ? (album && (album.cover
               ? <img src={base + album.cover} alt={'Official cover artwork for '+album.title} width="360" height="360" loading="lazy"/>
               : <div aria-label={'Official cover artwork pending for '+album.title} style="aspect-ratio:1;background:radial-gradient(circle,rgba(173,139,82,.22),#15130f 72%);border:1px solid rgba(173,139,82,.5);display:flex;align-items:center;justify-content:center;text-align:center;padding:1.25rem;color:#d6bf8f;font:500 2rem Georgia,serif">{album.title}</div>))
-            : <img class={artworkOverride ? 'codex-approved-portrait' : ''} src={base + (artworkOverride || 'images/codex/' + record.slug + '.svg')} alt={'An illustrated '+(record.kind==='character'?'portrait':'scene')+' for '+record.title+'; artistic details are interpretive'} width="360" height="360" loading="lazy"/>}
-          <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : artworkOverride ? 'APPROVED CODEX ILLUSTRATION' : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
+            : artworkOverride
+              ? <img class="codex-approved-portrait" src={base + artworkOverride} alt={'Approved Codex illustration for '+record.title} width="360" height="360" loading="lazy"/>
+              : artworkPending
+                ? <div class="codex-art-pending" role="img" aria-label={'Illustration pending approval for '+record.title}>
+                    <span class="codex-art-pending-top">CHRONICLES · THE FIRST CIRCLE</span>
+                    <span class="codex-art-pending-mark" aria-hidden="true">◇</span>
+                    <strong>{record.title}</strong>
+                    <span class="codex-art-pending-bottom">ARTWORK AWAITING APPROVAL</span>
+                  </div>
+                : <img src={base+'images/codex/'+record.slug+'.svg'} alt={'Interpretive Codex illustration for '+record.title} width="360" height="360" loading="lazy"/>}
+          <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : artworkOverride ? 'APPROVED CODEX ILLUSTRATION' : artworkPending ? 'ILLUSTRATION TO BE ADDED' : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
         </div>
         <p class="manuscript-opening">{record.kind === 'narration' ? ('Recovered testimony · '+(designation?.label || 'ARCHIVE')+' · '+record.albumTitle+'.') : record.summary}</p>
         <div class="manuscript-provenance"><span>RECORDED IN</span><a href={base + 'music/#' + record.albumSlug}>{record.albumTitle} ↗</a></div>
@@ -133,7 +144,9 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
       <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item">
-        {item.kind !== 'narration' && <img src={base + ((artworkOverrides as Record<string,string>)[item.slug] || 'images/codex/'+item.slug+'.svg')} alt="" width="110" height="110" loading="lazy"/>}
+        {item.kind !== 'narration' && (item.artworkPending && !(artworkOverrides as Record<string,string>)[item.slug]
+          ? <span class="codex-related-pending" aria-hidden="true">◇</span>
+          : <img src={base + ((artworkOverrides as Record<string,string>)[item.slug] || 'images/codex/'+item.slug+'.svg')} alt="" width="110" height="110" loading="lazy"/> )}
         <span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span>
       </a>)}</div>
     </section>}
@@ -192,6 +205,12 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
 .manuscript-chapter p{font:22px/1.4 'Cormorant Garamond',Georgia,serif;color:#34271b}
 @media(max-width:700px){.manuscript-ledger-row{grid-template-columns:1fr;gap:5px}.manuscript-chapter h3{font-size:36px}}
 .manuscript-art img.codex-approved-portrait{aspect-ratio:auto;object-fit:contain;height:auto;max-height:600px}
+.codex-art-pending{box-sizing:border-box;width:100%;min-height:300px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;text-align:center;padding:24px;border:1px solid #98784a;background:radial-gradient(ellipse at 50% 34%,#5b4730 0%,#34291e 55%,#1c1915 100%);color:#eaddbd}
+.codex-art-pending-top,.codex-art-pending-bottom{font:600 9px/1.5 Inter,sans-serif;letter-spacing:.13em;color:#d5ba85}
+.codex-art-pending-mark{font:42px Georgia,serif;color:#ae9060}
+.codex-art-pending strong{font:500 clamp(28px,4vw,42px)/1.1 'Cormorant Garamond',Georgia,serif;color:#f3e5c9}
+.codex-related-pending{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:90px;height:90px;border:1px solid #997746;background:#29251d;color:#bc9e64;font:40px Georgia,serif}
+@media(max-width:700px){.codex-art-pending{min-height:240px;gap:12px}}
 </style>
 
   <script>

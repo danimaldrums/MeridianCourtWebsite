@@ -9,6 +9,7 @@ const threads = referenceRecords.map(record => ({
 const people = threads.filter(item => item.record.kind === 'character');
 const places = threads.filter(item => item.record.kind === 'location');
 const phenomena = threads.filter(item => item.record.kind === 'phenomenon');
+const history = threads.filter(item => item.record.kind === 'history');
 ---
 <SiteLayout title="Threads of History" current="archive" description="Follow documented connections across the released Meridian Court Codex.">
   <main class="content-shell history-shell">
@@ -19,12 +20,13 @@ const phenomena = threads.filter(item => item.record.kind === 'phenomenon');
       <p>Every connection below comes from the published Codex register. Follow a thread through people, places and testimony. Where the records are silent, the silence remains.</p>
     </header>
     <nav class="history-jumps" aria-label="Explore threads">
-      <a href="#people">People</a><a href="#places">Places & structures</a><a href="#phenomena">The unexplained</a><a href="#reading-ledger">Reading ledger</a>
+      <a href="#people">People</a><a href="#places">Places & structures</a><a href="#phenomena">The unexplained</a><a href="#history">History & decisions</a><a href="#reading-ledger">Reading ledger</a>
     </nav>
     {[
       {id:'people',title:'Lives & witnesses',items:people},
       {id:'places',title:'Places & structures',items:places},
-      {id:'phenomena',title:'Events & anomalies',items:phenomena}
+      {id:'phenomena',title:'Events & anomalies',items:phenomena},
+      {id:'history',title:'Historical decisions & origins',items:history}
     ].map(section => <section id={section.id} class="history-section">
       <h2>{section.title}</h2>
       <div class="history-grid">

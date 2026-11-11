@@ -23,7 +23,9 @@ const artworkMap = artworks as Record<string,string>;
     <div class="atlas-grid">
       {section.entries.map(entry => <article class="atlas-plate">
         <a href={base+'archive/'+entry.slug+'/'} aria-label={'Open Codex record for '+entry.title}>
-          <img src={base+(artworkMap[entry.slug] || 'images/codex/'+entry.slug+'.svg')} alt={'Interpretive Codex illustration of '+entry.title} width="640" height="640" loading="lazy" decoding="async"/>
+          {entry.artworkPending && !artworkMap[entry.slug]
+             ? <div class="atlas-art-pending" role="img" aria-label={'Illustration pending approval for '+entry.title}><span>CHRONICLES · THE FIRST CIRCLE</span><strong>{entry.title}</strong><small>ARTWORK TO FOLLOW</small></div>
+             : <img src={base+(artworkMap[entry.slug] || 'images/codex/'+entry.slug+'.svg')} alt={'Interpretive Codex illustration of '+entry.title} width="640" height="640" loading="lazy" decoding="async"/>}
           <h3>{entry.title}</h3>
         </a>
         <p>{entry.summary}</p>
@@ -44,6 +46,9 @@ const artworkMap = artworks as Record<string,string>;
 .atlas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:1.4rem}
 .atlas-plate{border:1px solid rgba(173,139,82,.45);padding:1rem;background:rgba(173,139,82,.06)}
 .atlas-plate img{width:100%;aspect-ratio:4/3;object-fit:contain}
+.atlas-art-pending{box-sizing:border-box;aspect-ratio:4/3;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:18px;border:1px solid rgba(173,139,82,.65);background:linear-gradient(140deg,#31271e,#171611);color:#edddbb}
+.atlas-art-pending span,.atlas-art-pending small{font:600 9px/1.6 Inter,sans-serif;letter-spacing:.08em;color:#d8b989}
+.atlas-art-pending strong{font:500 clamp(26px,4vw,37px)/1.1 'Cormorant Garamond',Georgia,serif}
 .atlas-plate h3{font:500 1.8rem 'Cormorant Garamond',Georgia,serif;margin:.6rem 0}
 .atlas-plate p{line-height:1.55}
 .atlas-plate small{letter-spacing:.08em;opacity:.75}

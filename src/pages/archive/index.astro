@@ -10,10 +10,11 @@ const chapters = [
  {key:'character',number:'I',name:'People of the Court',detail:'Lives & witnesses',count:codexRecords.filter(r=>r.kind==='character').length},
  {key:'location',number:'II',name:'Places & monuments',detail:'Worlds & thresholds',count:codexRecords.filter(r=>r.kind==='location').length},
  {key:'phenomenon',number:'III',name:'The unexplained',detail:'Events & anomalies',count:codexRecords.filter(r=>r.kind==='phenomenon').length},
- {key:'narration',number:'IV',name:'Spoken Archives',detail:'The recorded words',count:codexRecords.filter(r=>r.kind==='narration').length},
- {key:'all',number:'V',name:'The full register',detail:'Every accessible leaf',count:codexRecords.length}
+ {key:'history',number:'IV',name:'History & decisions',detail:'Origins & choices',count:codexRecords.filter(r=>r.kind==='history').length},
+ {key:'narration',number:'V',name:'Spoken Archives',detail:'The recorded words',count:codexRecords.filter(r=>r.kind==='narration').length},
+ {key:'all',number:'VI',name:'The full register',detail:'Every accessible leaf',count:codexRecords.length}
 ];
-const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phenomenon:'PHENOMENON',narration:'ARCHIVE'};
+const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phenomenon:'PHENOMENON',history:'HISTORY',narration:'ARCHIVE'};
 ---
 <SiteLayout title="The Meridian Codex" current="archive" description="Enter the general records of Meridian Court, an illustrated in-universe codex of people, places and archived testimony.">
  <div class="content-shell" style="padding-top:1.25rem;text-align:center"><a href={base+'archive/threads/'} style="display:inline-block;border:1px solid rgba(173,139,82,.55);padding:.7rem 1.2rem;text-decoration:none;color:inherit;letter-spacing:.07em">✧ Explore the Threads of History</a> <a href={base+'archive/atlas/'} style="display:inline-block;border:1px solid rgba(173,139,82,.55);padding:.7rem 1.2rem;text-decoration:none;color:inherit;letter-spacing:.07em;margin:.3rem">Illustrated Atlas</a> <a href={base+'archive/ledger/'} style="display:inline-block;border:1px solid rgba(173,139,82,.55);padding:.7rem 1.2rem;text-decoration:none;color:inherit;letter-spacing:.07em;margin:.3rem">My Reading Ledger</a> <a href={base+'archive/registry/'} style="display:inline-block;border:1px solid rgba(173,139,82,.55);padding:.7rem 1.2rem;text-decoration:none;color:inherit;letter-spacing:.07em;margin:.3rem">Court Registry · Clearance</a></div>
@@ -64,7 +65,7 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
        {albums.map(album=><option value={album.slug}>{album.arc} · {album.title}</option>)}
       </select>
     </div>
-    <div class="codex-page-index-heading"><span id="codex-selected-chapter">I · PEOPLE OF THE COURT</span><span id="codex-count" aria-live="polite">8 entries</span></div>
+    <div class="codex-page-index-heading"><span id="codex-selected-chapter">I · PEOPLE OF THE COURT</span><span id="codex-count" aria-live="polite">{codexRecords.filter(entry=>entry.kind==='character').length} entries</span></div>
     <div class="codex-folio-list" id="codex-list" aria-label="Accessible folios">
      {codexRecords.map((entry,index)=>{
        const designation = entry.kind==='narration' ? archiveDesignation(entry.slug) : undefined;
@@ -72,7 +73,7 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
        return <a class="codex-folio-row" href={base+'archive/'+entry.slug+'/'} data-type={entry.kind} data-album={entry.albumSlug}
          data-search={(entry.title+' '+entry.albumTitle+' '+('albumArc' in entry ? entry.albumArc : '')+' '+('summary' in entry ? entry.summary : '')+' '+(designation?.identifier ?? '')).toLowerCase()}
          hidden={entry.kind!=='character'}>
-         <span class="codex-folio-symbol" aria-hidden="true">{entry.kind==='character'?'♙':entry.kind==='location'?'⌂':entry.kind==='phenomenon'?'✧':'◈'}</span>
+         <span class="codex-folio-symbol" aria-hidden="true">{entry.kind==='character'?'♙':entry.kind==='location'?'⌂':entry.kind==='phenomenon'?'✧':entry.kind==='history'?'◇':'◈'}</span>
          <span class="codex-folio-name"><strong>{entry.title}</strong><small>{entry.kind==='narration' ? entry.albumTitle : typeName[entry.kind]+' · '+entry.albumTitle}</small></span>
          <span class="codex-folio-id">{idLabel}</span>
        </a>;
@@ -120,7 +121,7 @@ const typeName: Record<string,string> = {character:'PERSON',location:'PLACE',phe
    const count=document.getElementById('codex-count');
    const title=document.getElementById('codex-selected-chapter');
    const empty=document.getElementById('codex-empty');
-   let active=['character','location','phenomenon','narration','all'].includes(chapterLink) ? chapterLink : 'character';
+   let active=['character','location','phenomenon','history','narration','all'].includes(chapterLink) ? chapterLink : 'character';
    for(const tab of nav)tab.setAttribute('aria-pressed',String(tab.dataset.filter===active));
    const filter=()=>{
      const q=(query.value||'').toLocaleLowerCase().trim();
