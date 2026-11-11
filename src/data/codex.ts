@@ -6,6 +6,7 @@ import { narrationsArcTwo } from './narrations/arc-two';
 import { narrationsArcThree } from './narrations/arc-three';
 import { narrationsArcFour } from './narrations/arc-four';
 import { narrationsChronicleMeridian } from './narrations/chronicle-meridian';
+import { narrationsChronicleFirstCircle } from './narrations/chronicle-first-circle';
 
 export type CodexKind = 'character' | 'location' | 'phenomenon' | 'narration';
 export interface CodexReference { slug:string; kind:Exclude<CodexKind,'narration'>; title:string; summary:string; body:string[]; albumSlug:string; albumTitle:string; related:string[] }
@@ -366,7 +367,8 @@ export const narrationRecords: CodexNarration[] = [
   ...narrationsArcTwo,
   ...narrationsArcThree,
   ...narrationsArcFour,
-  ...narrationsChronicleMeridian
+  ...narrationsChronicleMeridian,
+  ...narrationsChronicleFirstCircle
 ];
 export const codexRecords: CodexRecord[] = [...referenceRecords, ...narrationRecords];
 export const codexBySlug = new Map(codexRecords.map(entry=>[entry.slug,entry] as const));

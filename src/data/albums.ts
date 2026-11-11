@@ -56,5 +56,14 @@ export const chronicles: Album[] = [
     summary: 'Before she is known as Meridian, Asteris must confront loss, possibility and the consequences of choice.',
     tone: 'twilight',
     cover: 'images/chronicles-meridian-all-that-might-have-been.webp'
+  },
+  {
+    slug: 'what-tomorrow-costs', arc: 'CHRONICLES · THE FIRST CIRCLE', phase: 'AN ANCIENT STORY',
+    title: 'What Tomorrow Costs',
+    tagline: 'No future should be judged only by those who benefit.',
+    summary: 'When saving one world endangers another, twelve people discover that finding an answer is not the same as asking the right question.',
+    tone: 'gold',
+    // The approved PNG remains in the private archive; add its approved WebP export before setting this path.
+    cover: ''
   }
-];
+;

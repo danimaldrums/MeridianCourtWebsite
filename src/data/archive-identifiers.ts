@@ -179,6 +179,31 @@ const designated: Record<string, ArchiveDesignation> = {
     "label": "ARCHIVE V",
     "identifier": "V",
     "source": "sequence"
+  },
+  "what-tomorrow-costs-archive-01": {
+    "label": "ARCHIVE I",
+    "identifier": "I",
+    "source": "sequence"
+  },
+  "what-tomorrow-costs-archive-02": {
+    "label": "ARCHIVE II",
+    "identifier": "II",
+    "source": "sequence"
+  },
+  "what-tomorrow-costs-archive-03": {
+    "label": "ARCHIVE III",
+    "identifier": "III",
+    "source": "sequence"
+  },
+  "what-tomorrow-costs-archive-04": {
+    "label": "ARCHIVE IV",
+    "identifier": "IV",
+    "source": "sequence"
+  },
+  "what-tomorrow-costs-archive-05": {
+    "label": "ARCHIVE V",
+    "identifier": "V",
+    "source": "sequence"
   }
 };
 export function archiveDesignation(slug:string): ArchiveDesignation | undefined { return designated[slug]; }
