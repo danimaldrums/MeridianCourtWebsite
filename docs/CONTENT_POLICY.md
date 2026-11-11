@@ -87,4 +87,4 @@ The released catalogue now includes Arcs Ø–IV, Chronicles · Meridian and Chr
 
 ## First Circle publication boundary (11 November 2026)
 
-Publish only the approved First Circle narrative and five Archive scripts, never the private Suno production prompts. The original album cover is approved but its binary is held only in the private archive; publish its existing content as an optimised WebP when available, rather than substituting newly imagined artwork. Without a verified Suno album URL, do not create a listening link. The First Circle story's direct institutional connection to the later Court remains unresolved.
+Publish only the approved First Circle narrative and five Archive scripts, never the private Suno production prompts. The original album cover is approved; an optimised WebP derived from the creator-supplied image is now published in `public/images/chronicles-first-circle-what-tomorrow-costs.webp`. Do not substitute newly imagined artwork. Without a verified Suno album URL, do not create a listening link. The First Circle story's direct institutional connection to the later Court remains unresolved.
