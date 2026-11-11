@@ -7,9 +7,10 @@ import { narrationsArcThree } from './narrations/arc-three';
 import { narrationsArcFour } from './narrations/arc-four';
 import { narrationsChronicleMeridian } from './narrations/chronicle-meridian';
 import { narrationsChronicleFirstCircle } from './narrations/chronicle-first-circle';
+import { firstCircleReferences } from './first-circle';
 
-export type CodexKind = 'character' | 'location' | 'phenomenon' | 'narration';
-export interface CodexReference { slug:string; kind:Exclude<CodexKind,'narration'>; title:string; summary:string; body:string[]; albumSlug:string; albumTitle:string; related:string[] }
+export type CodexKind = 'character' | 'location' | 'phenomenon' | 'history' | 'narration';
+export interface CodexReference { slug:string; kind:Exclude<CodexKind,'narration'>; title:string; summary:string; body:string[]; albumSlug:string; albumTitle:string; related:string[]; artworkPending?:boolean }
 export interface CodexNarration { slug:string; kind:'narration'; title:string; albumSlug:string; albumTitle:string; albumArc:string; archiveNumber:number; body:string }
 export type CodexRecord = CodexReference | CodexNarration;
 
@@ -359,7 +360,8 @@ export const referenceRecords: CodexReference[] = [
       "the-seeker",
       "the-shattered-horizon-archive-01"
     ]
-  }
+  },
+  ...firstCircleReferences
 ];
 export const narrationRecords: CodexNarration[] = [
   ...narrationsArcZero,
