@@ -63,6 +63,5 @@ export const chronicles: Album[] = [
     tagline: 'No future should be judged only by those who benefit.',
     summary: 'When saving one world endangers another, twelve people discover that finding an answer is not the same as asking the right question.',
     tone: 'gold',
-    // The approved PNG remains in the private archive; add its approved WebP export before setting this path.
-    cover: ''
+    cover: 'images/chronicles-first-circle-what-tomorrow-costs.webp'
   }];
