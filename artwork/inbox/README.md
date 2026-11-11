@@ -24,3 +24,19 @@ No changes to source code are required when replacing the same subject's portrai
 **If a workflow fails:** check the Actions tab for the validation message. The input image will remain in the inbox so it can be fixed. For manual runs: Actions → Publish approved Codex artwork → Run workflow.
 
 This is an upload-and-publish pipeline, not image generation. ChatGPT can prepare an optimised image file, but the current GitHub connector cannot ingest a generated image directly from ChatGPT's local file storage. One human upload bridges that gap. 
+
+## First Circle Chronicle — new pages (11 November 2026)
+
+The following released reference pages have deliberately blank illustration slots. Once each artwork is approved, upload a PNG, JPEG or WebP image whose **filename stem exactly matches its Codex slug**:
+
+- `seren-vale.webp`
+- `cael-ordan.webp`
+- `elara-vey.webp`
+- `tavian-rho.webp`
+- `ilyra-sen.webp`
+- `first-circle-first-world.webp`
+- `first-circle-second-world.webp`
+- `the-original-first-circle.webp`
+- `first-circle-adaptation.webp`
+
+The original First Circle worlds are canonically **unnamed**, and the first twelve do not establish a confirmed architectural design or later Court institutional lineage. Illustrations must respect those unknowns. The artwork pipeline recognises all nine slugs and will replace each typographic placeholder with the creator-approved image.

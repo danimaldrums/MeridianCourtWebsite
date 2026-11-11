@@ -17,6 +17,7 @@ INBOX = ROOT / "artwork" / "inbox"
 OUTPUT = ROOT / "public" / "images" / "codex"
 MANIFEST = ROOT / "src" / "data" / "codex-artworks.json"
 CANONICAL_RECORDS = ROOT / "src" / "data" / "codex.ts"
+FIRST_CIRCLE_RECORDS = ROOT / "src" / "data" / "first-circle.ts"
 ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 MAX_INPUT_BYTES = 16 * 1024 * 1024
 MAX_IMAGE_PIXELS = 24_000_000
@@ -24,12 +25,25 @@ Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS
 
 
 def published_reference_slugs() -> set[str]:
-    """Whitelist only the 19-or-more editorial, released reference slugs."""
+    """Whitelist only published Codex reference slugs, including the First Circle.
+
+    Do not accept narration, draft or unreleased album identifiers merely because
+    they occur elsewhere in the repository.
+    """
     source = CANONICAL_RECORDS.read_text(encoding="utf-8")
     begin = source.index("export const referenceRecords:")
     end = source.index("export const narrationRecords", begin)
-    section = source[begin:end]
-    return set(re.findall(r'"slug"\s*:\s*"([a-z0-9-]+)"', section))
+    primary_references = source[begin:end]
+
+    first_circle = FIRST_CIRCLE_RECORDS.read_text(encoding="utf-8")
+    start = first_circle.index("export const firstCircleReferences:")
+    finish = first_circle.index("export const firstCircleCompanions:", start)
+    chronicle_references = first_circle[start:finish]
+
+    return set(re.findall(
+        r'"slug"\s*:\s*"([a-z0-9-]+)"',
+        primary_references + "\n" + chronicle_references,
+    ))
 
 
 def convert(source: Path, target: Path) -> None:

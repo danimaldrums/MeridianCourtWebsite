@@ -88,3 +88,9 @@ The released catalogue now includes Arcs Ø–IV, Chronicles · Meridian and Chr
 ## First Circle publication boundary (11 November 2026)
 
 Publish only the approved First Circle narrative and five Archive scripts, never the private Suno production prompts. The original album cover is approved; an optimised WebP derived from the creator-supplied image is now published in `public/images/chronicles-first-circle-what-tomorrow-costs.webp`. Do not substitute newly imagined artwork. Without a verified Suno album URL, do not create a listening link. The First Circle story's direct institutional connection to the later Court remains unresolved.
+
+## First Circle Codex expansion (11 November 2026)
+
+The public register now contains **28 editorial reference entries and 40 released narrated Archives**. The nine new historical references cover the five named First Circle protagonists, the two unnamed affected worlds, the original twelve's deliberative practice and Adaptation. The new `history` category distinguishes historical decisions and institutions from physical phenomena. These entries draw from approved Locked Canon, not from draft alternatives. Do not infer names for the other seven original participants, identify the unnamed worlds with later places or equate Adaptation with the later Continuance.
+
+New records are marked `artworkPending` and display a textual panel until the creator approves an illustration. Both individual records and the Atlas/related-record views check the approved artwork manifest first, so a processed image replaces the placeholder automatically. The approved artwork intake whitelist now includes the nine references stored in `src/data/first-circle.ts` while continuing to reject unapproved or unreleased entries.
