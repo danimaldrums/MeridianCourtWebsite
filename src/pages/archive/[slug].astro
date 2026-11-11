@@ -15,7 +15,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 const kindLabels = {character:'CHARACTER',location:'LOCATION',phenomenon:'PHENOMENON',history:'HISTORICAL RECORD',narration:'ARCHIVE NARRATION'};
 const album = [...arcs, ...chronicles].find(x => x.slug === record.albumSlug);
 const designation = record.kind === 'narration' ? archiveDesignation(record.slug) : undefined;
-const artworkOverride = (artworkOverrides as Record<string,string>)[record.slug];
+const artworkOverridesMap = artworkOverrides as Record<string,string>;
+const artworkOverride = artworkOverridesMap[record.slug];
 const companion = record.kind === 'narration' ? undefined : (firstCircleCompanions[record.slug] ?? peopleCompanion[record.slug] ?? placesCompanion[record.slug]);
 const artworkPending = record.kind !== 'narration' && Boolean(record.artworkPending);
 // Spoken Archives also lead readers to neighbouring testimony and relevant released references.
@@ -144,9 +145,9 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
     {related.length>0 && <section class="codex-connections" aria-label="Connected records">
       <div class="section-ribbon"><span class="overline">FOLLOW THE CONNECTIONS</span><span class="section-caption">OTHER PAGES IN THIS VOLUME</span></div>
       <div class="codex-related-grid">{related.map(item=><a href={base+'archive/'+item.slug+'/'} class="codex-related-item">
-        {item.kind !== 'narration' && (item.artworkPending && !(artworkOverrides as Record<string,string>)[item.slug]
+        {item.kind !== 'narration' && (item.artworkPending && !artworkOverridesMap[item.slug]
           ? <span class="codex-related-pending" aria-hidden="true">◇</span>
-          : <img src={base + ((artworkOverrides as Record<string,string>)[item.slug] || 'images/codex/'+item.slug+'.svg')} alt="" width="110" height="110" loading="lazy"/> )}
+          : <img src={base + (artworkOverridesMap[item.slug] || 'images/codex/'+item.slug+'.svg')} alt="" width="110" height="110" loading="lazy"/> )}
         <span class="overline">{kindLabels[item.kind]}</span><strong>{item.title}</strong><span aria-hidden="true">↗</span>
       </a>)}</div>
     </section>}
