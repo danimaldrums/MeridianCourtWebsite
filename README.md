@@ -42,4 +42,4 @@ The three-mark hidden-record puzzle is published. It leads to **The Unindexed Re
 
 ## First Circle release (11 November 2026)
 
-*What Tomorrow Costs* is now a public, Locked Canon Chronicle. The album listing, spoiler-aware written story, historical chronology and five public Codex narrations have been updated. The approved original cover remains private until its optimised WebP export is uploaded to `public/images/chronicles-first-circle-what-tomorrow-costs.webp`; a branded typography panel is shown until then. No unverified Suno album URL is published. Arc V remains unreleased.
+*What Tomorrow Costs* is now a public, Locked Canon Chronicle. The album listing, spoiler-aware written story, historical chronology and five public Codex narrations have been updated. The creator-approved cover is published as `public/images/chronicles-first-circle-what-tomorrow-costs.webp`, and is used for the album catalogue, story page and narrated Archives. No unverified Suno album URL is published. Arc V remains unreleased.
