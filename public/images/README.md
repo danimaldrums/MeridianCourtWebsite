@@ -13,6 +13,6 @@ Upload the following approved WebP assets to this folder to activate the v0.2 im
 
 The source PNGs and original artwork are preserved separately in the private archive. This website uses optimised copies only.
 
-**Do not publish the unreleased First Circle and Arc V artwork.**
+**The First Circle is now released.** Its approved cover may be added as an optimised copy named `chronicles-first-circle-what-tomorrow-costs.webp` (pending export from the approved private PNG). Do not publish unreleased Arc V artwork.
 
 These asset URLs are relative to the Astro base path for GitHub Pages.

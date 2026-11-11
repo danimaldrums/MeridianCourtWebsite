@@ -31,7 +31,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     </div>
   </section>
   <section class="feature content-shell">
-    <div class="section-ribbon"><span class="overline">02 / FEATURED RELEASE</span><span class="section-caption">ARC IV · CONTINUANCE</span></div>
+    <div class="section-ribbon"><span class="overline">02 / FEATURED MAINLINE RELEASE</span><span class="section-caption">ARC IV · CONTINUANCE</span></div>
     <div class="feature-layout">
       <div class="art-panel tone-dawn feature-art">
         <img class="approved-cover" src={base + 'images/arc-4-the-unwritten-dawn.webp'} alt="Official Meridian Court artwork for The Unwritten Dawn" loading="lazy" decoding="async" onerror="this.hidden=true" />
@@ -39,13 +39,19 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
         <div class="art-caption"><span>MERIDIAN COURT</span><strong>THE UNWRITTEN<br/>DAWN</strong><small>ARC IV · CONTINUANCE</small></div>
       </div>
       <div class="feature-copy">
-        <p class="overline">THE LATEST RELEASED CHAPTER</p>
+        <p class="overline">THE LATEST RELEASED NUMBERED ARC</p>
         <h2>The Unwritten<br/><em>Dawn</em></h2>
         <div class="small-rule"></div>
         <blockquote>“The future belongs to nobody yet.”</blockquote>
         <p>{arcs[4].summary}</p>
         <a class="button button-outline" href={base + 'music/#the-unwritten-dawn'}>Discover the album <span aria-hidden="true">↗</span></a>
       </div>
+    </div>
+  </section>
+  <section class="content-shell" style="padding-top:1.5rem;padding-bottom:2rem">
+    <div style="border:1px solid rgba(173,139,82,.5);padding:clamp(1.25rem,3vw,2.25rem);display:flex;align-items:center;flex-wrap:wrap;gap:1.25rem;justify-content:space-between;background:rgba(173,139,82,.06)">
+      <div><p class="overline">NEWLY RELEASED · CHRONICLES · THE FIRST CIRCLE</p><h2 style="font:500 clamp(2rem,5vw,3rem) 'Cormorant Garamond',Georgia,serif;margin:.25rem 0">What Tomorrow Costs</h2><p>Fifteen songs and five narrated Archives. A history of choice, consequence and the twelve who stayed.</p></div>
+      <a class="button button-outline" href={base + 'music/what-tomorrow-costs/'}>Discover the Chronicle <span aria-hidden="true">↗</span></a>
     </div>
   </section>
   <section class="journey content-shell">

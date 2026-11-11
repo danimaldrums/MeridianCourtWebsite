@@ -56,7 +56,9 @@ const hiddenMark = ({ 'the-seeker': { number:1, label:'I', fragment:'A PAGE' }, 
         <h1>{record.title}</h1>
         <div class="manuscript-art">
           {record.kind === 'narration'
-            ? (album && <img src={base + album.cover} alt={'Official cover artwork for '+album.title} width="360" height="360" loading="lazy"/>)
+            ? (album && (album.cover
+              ? <img src={base + album.cover} alt={'Official cover artwork for '+album.title} width="360" height="360" loading="lazy"/>
+              : <div aria-label={'Official cover artwork pending for '+album.title} style="aspect-ratio:1;background:radial-gradient(circle,rgba(173,139,82,.22),#15130f 72%);border:1px solid rgba(173,139,82,.5);display:flex;align-items:center;justify-content:center;text-align:center;padding:1.25rem;color:#d6bf8f;font:500 2rem Georgia,serif">{album.title}</div>))
             : <img class={artworkOverride ? 'codex-approved-portrait' : ''} src={base + (artworkOverride || 'images/codex/' + record.slug + '.svg')} alt={'An illustrated '+(record.kind==='character'?'portrait':'scene')+' for '+record.title+'; artistic details are interpretive'} width="360" height="360" loading="lazy"/>}
           <span class="manuscript-plate-caption">{record.kind==='narration' ? 'VOLUME ARTWORK · '+record.albumTitle : artworkOverride ? 'APPROVED CODEX ILLUSTRATION' : 'ARCHIVIST’S ILLUSTRATION · INTERPRETIVE'}</span>
         </div>

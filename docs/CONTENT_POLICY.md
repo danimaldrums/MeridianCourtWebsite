@@ -20,10 +20,9 @@ Before publishing:
 - Arc III — The Shattered Horizon
 - Arc IV — The Unwritten Dawn
 - Chronicles · Meridian — All That Might Have Been
+- Chronicles · The First Circle — What Tomorrow Costs (released on Suno 11 November 2026)
 
 ## Excluded
-
-- Chronicles · The First Circle — What Tomorrow Costs (unreleased Working Canon)
 - Arc V / Resonance Cycle development
 - Internal governance, experiments and novel drafts
 
@@ -84,4 +83,8 @@ The approved Meridian portrait was uploaded to the GitHub artwork inbox on 20 Oc
 
 The approved released-album covers, site logo and profile artwork are now referenced by the website; earlier 'next phase' statements above are historical notes, not current publication status. All 19 Codex character/place/phenomenon artwork overrides are recorded in `src/data/codex-artworks.json`. The hidden three-mark route and **The Unindexed Record — The Shoreless Light** are published, including the separate notebook-style sketch at `public/images/codex/the-unindexed-record.webp`. The creator approved this as a website-exclusive mystery, **not** as confirmed historical testimony or Locked Canon. The secret sketch must not be added to the 19-reference Codex artwork manifest.
 
-The released catalogue remains Arcs Ø–IV and Chronicles · Meridian. Arc V and the First Circle Chronicle remain excluded until the creator confirms public release. Official listening links must be verified before publication. The artwork publishing workflow and Pages deployment workflow are separate; verify that both complete and that the deployed asset is refreshed before declaring publication successful.
+The released catalogue now includes Arcs Ø–IV, Chronicles · Meridian and Chronicles · The First Circle. The creator confirmed release of *What Tomorrow Costs* on 11 November 2026. Arc V remains excluded pending publication. Official listening links must be verified before publication. The artwork publishing workflow and Pages deployment workflow are separate; verify that both complete and that the deployed asset is refreshed before declaring publication successful.
+
+## First Circle publication boundary (11 November 2026)
+
+Publish only the approved First Circle narrative and five Archive scripts, never the private Suno production prompts. The original album cover is approved but its binary is held only in the private archive; publish its existing content as an optimised WebP when available, rather than substituting newly imagined artwork. Without a verified Suno album URL, do not create a listening link. The First Circle story's direct institutional connection to the later Court remains unresolved.
